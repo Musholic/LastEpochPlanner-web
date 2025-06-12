@@ -68,7 +68,7 @@ for (const file of shelljs.find(basePath)) {
     shelljs.cp(file, dest);
   }
 
-  if (path.extname(file) === ".lua" || path.extname(file) === ".zip" || path.extname(file).startsWith(".part")) {
+  if (path.extname(file) === ".json" || path.extname(file) === ".lua" || path.extname(file) === ".zip" || path.extname(file).startsWith(".part")) {
     const content = fs.readFileSync(file);
 
     // patching
