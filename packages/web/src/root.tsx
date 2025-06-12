@@ -44,7 +44,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta name="viewport" content="width=1280, initial-scale=1.0" />
         <title>pob.cool</title>
         <meta property="og:title" content="pob.cool" />
-        <meta property="og:description" content="A web version of Path of Building" />
+        <meta property="og:description" content="A web version of Path of Building for Last Epoch" />
         <meta property="og:image" content="https://pob.cool/favicon.png" />
         <meta property="og:url" content="https://pob.cool" />
         <meta property="og:type" content="website" />

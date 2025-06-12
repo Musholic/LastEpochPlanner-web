@@ -18,17 +18,14 @@ if (!tag) {
   process.exit(1);
 }
 
-const product = process.argv[3] === "poe1" ? 1 : process.argv[3] === "poe2" ? 2 : undefined;
+const product = process.argv[3] === "lastepoch" ? 1 : undefined;
 if (!product) {
   console.error("Invalid target");
   process.exit(1);
 }
 
 const buildDir = `build/${product}/${tag}`;
-const remote =
-  product === 1
-    ? "https://github.com/PathOfBuildingCommunity/PathOfBuilding.git"
-    : "https://github.com/PathOfBuildingCommunity/PathOfBuilding-PoE2.git";
+const remote = "https://github.com/Musholic/PathOfBuildingForLastEpoch.git";
 const repoDir = `${buildDir}/repo`;
 
 if (clone) {

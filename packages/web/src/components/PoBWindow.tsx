@@ -7,7 +7,7 @@ import { log, tag } from "../lib/logger";
 const { useHash } = use;
 
 export default function PoBWindow(props: {
-  product: "poe1" | "poe2";
+  product: "lastepoch";
   version: string;
   onFrame: (at: number, time: number) => void;
   onTitleChange: (title: string) => void;
@@ -47,7 +47,7 @@ export default function PoBWindow(props: {
   useEffect(() => {
     log.debug(tag.pob, "loading version", props.version);
 
-    const assetPrefix = `${__ASSET_PREFIX__}${props.product === "poe2" ? ".2" : ""}/${props.version}`;
+    const assetPrefix = `${__ASSET_PREFIX__}/${props.version}`;
     const _driver = new Driver("release", assetPrefix, {
       onError: message => {
         throw new Error(message);
@@ -94,7 +94,7 @@ export default function PoBWindow(props: {
         await _driver.start({
           cloudflareKvPrefix: "/api/kv",
           cloudflareKvAccessToken: token,
-          cloudflareKvUserNamespace: props.product === "poe2" ? "poe2" : undefined,
+          cloudflareKvUserNamespace: undefined,
         });
         log.debug(tag.pob, "started", container.current);
         if (buildCode) {

@@ -203,10 +203,7 @@ export class DriverWorker {
         namespace: fileSystemConfig.cloudflareKvUserNamespace,
       });
 
-      const pobUserDir =
-        fileSystemConfig.cloudflareKvUserNamespace === undefined
-          ? "/user/Path of Building"
-          : "/user/Path of Building (PoE2)";
+      const pobUserDir = "/user/Path of Building for Last Epoch";
 
       const cloudDir = `${pobUserDir}/Builds/Cloud`;
       if (!(await zenfs.promises.exists(cloudDir))) await zenfs.promises.mkdir(cloudDir, { recursive: true });

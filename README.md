@@ -2,7 +2,7 @@
 
 [![wakatime](https://wakatime.com/badge/user/018dace5-5642-4ac8-88a7-2ec0a867f8a7/project/fa7418b8-8ddb-479c-805b-ce2043f24d24.svg)](https://wakatime.com/badge/user/018dace5-5642-4ac8-88a7-2ec0a867f8a7/project/fa7418b8-8ddb-479c-805b-ce2043f24d24)
 
-This is browser version of [Path of Building](https://pathofbuilding.community/).
+This is browser version of [Path of Building for Last Epoch](https://github.com/Musholic/PathOfBuildingForLastEpoch).
 
 ## Features
 

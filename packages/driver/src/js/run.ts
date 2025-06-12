@@ -1,7 +1,7 @@
 import { Driver } from "./driver";
 
 (async () => {
-  const version = `${__RUN_GAME__ === "poe2" ? "2" : "1"}/${__RUN_VERSION__}/r2`;
+  const version = `1/${__RUN_VERSION__}/r2`;
   const versionPrefix = `${__ASSET_PREFIX__}/${version}`;
 
   const driver = new Driver(__RUN_BUILD__, versionPrefix, {

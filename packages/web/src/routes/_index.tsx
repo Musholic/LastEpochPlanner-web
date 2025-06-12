@@ -24,7 +24,7 @@ dayjs.extend(localizedFormat);
 export async function clientLoader(args: Route.ClientLoaderArgs) {
   // Redirect if the landing from the pobb.in
   if (location.hash.startsWith("#build=")) {
-    return redirect(`/poe1#${location.hash.slice("#build".length)}`);
+    return redirect(`/lastepoch#${location.hash.slice("#build".length)}`);
   }
 
   const rep = await fetch(__VERSION_URL__);
@@ -32,11 +32,8 @@ export async function clientLoader(args: Route.ClientLoaderArgs) {
 }
 
 const games = {
-  poe1: {
-    name: "Path of Exile 1",
-  },
-  poe2: {
-    name: "Path of Exile 2",
+  lastepoch: {
+    name: "Last Epoch",
   },
 };
 
@@ -82,28 +79,19 @@ export default function Index({ loaderData }: Route.ComponentProps) {
           <div className="max-w-md">
             <h1 className="text-5xl font-bold mb-5">pob.cool</h1>
             <p className="mb-5 text-xl">
-              The web version of Path of Building. Explore and save your builds anywhere, anytime.
+              The web version of Path of Building for Last Epoch. Explore and save your builds anywhere, anytime.
             </p>
           </div>
 
-          {/* PoE1 and PoE2 Start Buttons */}
+          {/* Last Epoch Start Buttons */}
           <div className="flex flex-col md:flex-row gap-8 mt-4">
-            {/* PoE2 Card */}
-            <div className="card w-64 bg-base-100 shadow-md p-4 transition-shadow hover:shadow-lg">
-              <span className="min-h-44">
-                <img src="/logo-poe2.webp" alt="Path of Exile 2" className="mx-auto mb-4" />
-              </span>
-              <Link to="/poe2" className="btn btn-primary btn-block">
-                Start for Path of Exile 2 <ArrowRightIcon className="size-4" />
-              </Link>
-            </div>
-            {/* PoE1 Card */}
+            {/* Last Epoch Card */}
             <div className="card w-64 bg-base-100 shadow-md p-4 transition-shadow hover:shadow-lg">
               <span className="min-h-44">
                 <img src="/logo-poe1.webp" alt="Path of Exile 1" className="mx-auto mb-4" />
               </span>
-              <Link to="/poe1" className="btn btn-primary btn-block">
-                Start for Path of Exile 1 <ArrowRightIcon className="size-4" />
+              <Link to="/lastepoch" className="btn btn-primary btn-block">
+                Start for Last Epoch <ArrowRightIcon className="size-4" />
               </Link>
             </div>
           </div>
@@ -117,13 +105,6 @@ export default function Index({ loaderData }: Route.ComponentProps) {
         </h2>
         <div role="alert" className="max-w-4xl mx-auto alert alert-warning prose">
           <ul>
-            <li>
-              Do not enter <code className="text-inherit">POESESSID</code> in the PoB of this site.
-            </li>
-            <li>
-              For security reasons, network requests containing the <code className="text-inherit">POESESSID</code>{" "}
-              cookie will be unconditionally rejected.
-            </li>
             <li>
               Network access is through our CORS proxy, so all users have the same source IP. This will likely cause
               rate limiting.
@@ -145,7 +126,7 @@ export default function Index({ loaderData }: Route.ComponentProps) {
               <GlobeAltIcon className="h-8 w-8 text-accent mr-2" />
               <h3 className="text-xl font-semibold">Original PoB in Your Browser</h3>
             </div>
-            <p>Enjoy the full functionality of the original Path of Building without installing anything locally.</p>
+            <p>Enjoy the full functionality of the original Path of Building for Last Epoch without installing anything locally.</p>
           </div>
 
           {/* Feature 2: Switch Between PoB Versions */}
@@ -185,11 +166,8 @@ export default function Index({ loaderData }: Route.ComponentProps) {
         </h2>
 
         <div className="max-w-4xl mx-auto flex flex-col md:flex-row gap-8">
-          {/* PoE2 Versions Table */}
-          {versionTable("poe2")}
-
-          {/* PoE1 Versions Table */}
-          {versionTable("poe1")}
+          {/* Last Epoch Versions Table */}
+          {versionTable("lastepoch")}
         </div>
       </section>
 
