@@ -171,7 +171,7 @@ export class DriverWorker {
       printErr: console.warn,
     });
 
-    const fetchBase = import.meta.resolve(`../../dist/${build}/`);
+    const fetchBase = import.meta.resolve(`../dist/${build}/`);
     const rootZip = await fetch(`${assetPrefix}/root.zip`);
     await zenfs.configure({
       mounts: {

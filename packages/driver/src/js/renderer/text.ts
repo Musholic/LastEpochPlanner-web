@@ -4,9 +4,9 @@ import type { TextureBitmap } from "./renderer";
 const reColorGlobal = /\^([0-9])|\^[xX]([0-9a-fA-F]{6})/g;
 
 export async function loadFonts() {
-  await loadFont("/LiberationSans-Regular.woff", "Liberation Sans");
-  await loadFont("/LiberationSans-Bold.woff", "Liberation Sans Bold");
-  await loadFont("/VeraMono.woff", "Bitstream Vera Mono");
+  await loadFont("../LiberationSans-Regular.woff", "Liberation Sans");
+  await loadFont("../LiberationSans-Bold.woff", "Liberation Sans Bold");
+  await loadFont("../VeraMono.woff", "Bitstream Vera Mono");
 }
 
 async function loadFont(url: string, family: string) {
