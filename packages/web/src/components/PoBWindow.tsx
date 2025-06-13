@@ -54,37 +54,32 @@ export default function PoBWindow(props: {
       },
       onFrame,
       onFetch: async (url, headers, body) => {
-        let rep = undefined;
-
-        if (url.startsWith("https://pobb.in/")) {
-          try {
-            const r = await fetch(url, {
-              method: body ? "POST" : "GET",
-              body,
-              headers,
-            });
-            if (r.ok) {
-              rep = {
-                body: await r.text(),
-                headers: Object.fromEntries(r.headers.entries()),
-                status: r.status,
-              };
-              log.debug(tag.pob, "CORS fetch success", url, rep);
-            }
-          } catch (e) {
-            log.warn(tag.pob, "CORS fetch error", e);
-          }
-        }
-
-        if (!rep) {
-          const r = await fetch("/api/fetch", {
-            method: "POST",
-            body: JSON.stringify({ url, headers, body }),
+        try {
+          const r = await fetch(url, {
+            method: body ? "POST" : "GET",
+            body,
+            headers,
           });
-          rep = await r.json();
+          if (r.ok) {
+            let rep = {
+              body: await r.text(),
+              headers: Object.fromEntries(r.headers.entries()),
+              status: r.status,
+              error: undefined
+            };
+            log.debug(tag.pob, "CORS fetch success", url, rep);
+            return rep;
+          }
+        } catch (e) {
+          log.warn(tag.pob, "CORS fetch error", e);
         }
 
-        return rep;
+        return {
+          body: "",
+          headers: {} as Record<string, string>,
+          status: 404,
+          error: "Not Found"
+        };
       },
       onTitleChange,
     });
