@@ -41,6 +41,8 @@ jobs:
           mkdir dist/assets/versions;
           cp packages/packer/build/1/v0.5.1/r2 dist/assets/versions/v0.5.1 -r;
           cp version.json dist/
+          # SPA trick
+          cp dist/index.html dist/404.html
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
