@@ -8,6 +8,7 @@ const rootDir = path.resolve(__dirname, "../..");
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
+  base: "/pob-web/",
   server: {
     host: true,
     proxy: {
@@ -30,7 +31,7 @@ export default defineConfig(({ mode }) => ({
     __VERSION_URL__: JSON.stringify(
       mode === "development" ? `/@fs/${rootDir}/version.json` : "https://asset.pob.cool/version.json",
     ),
-    __ASSET_PREFIX__: JSON.stringify("https://asset.pob.cool/versions"),
+    __ASSET_PREFIX__: JSON.stringify("https://musholic.github.io/pob-web/versions"),
   },
   worker: {
     format: "es",
