@@ -29,7 +29,7 @@ export default defineConfig(({ mode }) => ({
   define: {
     APP_VERSION: JSON.stringify(process.env.npm_package_version),
     __VERSION_URL__: JSON.stringify(
-      mode === "development" ? `/@fs/${rootDir}/version.json` : "https://asset.pob.cool/version.json",
+      mode === "development" ? `/@fs/${rootDir}/version.json` : "https://musholic.github.io/pob-web/version.json",
     ),
     __ASSET_PREFIX__: JSON.stringify("https://musholic.github.io/pob-web/versions"),
   },
