@@ -32,10 +32,20 @@ jobs:
       - name: "Build"
         run: npm run build -ws
 
+      - name: "Pack last version"
+        run: npm run pack -w packages/packer v0.5.1 lastepoch clone
+
+      - name: "Assemble"
+        run: |
+          cp -r packages/web/build/client dist
+          mkdir dist/assets/versions;
+          cp packages/packer/build/1/v0.5.1/r2 dist/assets/versions/v0.5.1 -r;
+          cp version.json dist/
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: 'packages/web/build/client'
+          path: 'dist'
   deploy:
     # Add a dependency to the build job
     needs: build
