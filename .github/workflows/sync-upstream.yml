@@ -36,7 +36,7 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            const [owner, repo] = process.env.GAME === 'lastepoch' ? ['Musholic', 'PathOfBuildingForLastEpoch'] : [undefined, undefined]);
+            const [owner, repo] = process.env.GAME === 'lastepoch' ? ['Musholic', 'PathOfBuildingForLastEpoch'] : [undefined, undefined];
             if (!owner || !repo) {
               throw new Error('Invalid game specified. Please use "lastepoch".');
             }
@@ -150,31 +150,22 @@ jobs:
         if: steps.new_versions.outputs.result != 'null'
         run: npm ci
 
-      - name: Pack and sync new versions
+      - name: Pack new versions
         if: steps.new_versions.outputs.result != 'null'
         env:
           NEW_TAGS: ${{ steps.new_versions.outputs.result }}
-          R2_ENDPOINT_URL: https://621480c42e70995622a2d0a86bb7751c.r2.cloudflarestorage.com
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         uses: actions/github-script@v7
         with:
           script: |
             const newTags = JSON.parse(process.env.NEW_TAGS);
             for (const tag of newTags) {
               await exec.exec(`npm run -w packages/packer pack ${tag.name} ${process.env.GAME} clone`);
-              if (process.env.DRY_RUN !== 'true') {
-                await exec.exec(`npm run -w packages/packer sync ${tag.name} ${process.env.GAME}`);
-              }
             }
 
       - name: Update version.json
         if: steps.new_versions.outputs.result != 'null'
         env:
           NEW_TAGS: ${{ steps.new_versions.outputs.result }}
-          R2_ENDPOINT_URL: https://621480c42e70995622a2d0a86bb7751c.r2.cloudflarestorage.com
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         uses: actions/github-script@v7
         with:
           script: |
@@ -194,10 +185,6 @@ jobs:
 
             core.info(`Updated versions: ${JSON.stringify(versions, null, 2)}`);
             fs.writeFileSync(process.env.VERSION_FILE, JSON.stringify(versions, null, 2));
-
-            if (process.env.DRY_RUN !== 'true') {
-              await exec.exec(`aws s3 cp --checksum-algorithm=CRC32 --region auto --endpoint-url ${process.env.R2_ENDPOINT_URL} version.json s3://pob-web/version.json`);
-            }
 
       - name: Commit changes
         if: steps.new_versions.outputs.result != 'null' && env.DRY_RUN != 'true'
