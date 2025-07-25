@@ -7,7 +7,7 @@ import { log, tag } from "../lib/logger";
 const { useHash } = use;
 
 export default function PoBWindow(props: {
-  product: "lastepoch";
+  product: "le";
   version: string;
   onFrame: (at: number, time: number) => void;
   onTitleChange: (title: string) => void;

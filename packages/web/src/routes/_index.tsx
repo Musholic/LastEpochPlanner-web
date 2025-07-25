@@ -32,7 +32,7 @@ export async function clientLoader(args: Route.ClientLoaderArgs) {
 }
 
 const games = {
-  lastepoch: {
+  le: {
     name: "Last Epoch",
   },
 };
@@ -85,12 +85,12 @@ export default function Index({ loaderData }: Route.ComponentProps) {
 
           {/* Last Epoch Start Buttons */}
           <div className="flex flex-col md:flex-row gap-8 mt-4">
-            {/* Last Epoch Card */}
+            {/* LE Card */}
             <div className="card w-64 bg-base-100 shadow-md p-4 transition-shadow hover:shadow-lg">
               <span className="min-h-44">
-                <img src="/logo-poe1.webp" alt="Path of Exile 1" className="mx-auto mb-4" />
+                <img src="/logo-le.png" alt="Last Epoch" className="mx-auto mb-4" />
               </span>
-              <Link to="/lastepoch" className="btn btn-primary btn-block">
+              <Link to="/le" className="btn btn-primary btn-block">
                 Start for Last Epoch <ArrowRightIcon className="size-4" />
               </Link>
             </div>
@@ -167,7 +167,7 @@ export default function Index({ loaderData }: Route.ComponentProps) {
 
         <div className="max-w-4xl mx-auto flex flex-col md:flex-row gap-8">
           {/* Last Epoch Versions Table */}
-          {versionTable("lastepoch")}
+          {versionTable("le")}
         </div>
       </section>
 

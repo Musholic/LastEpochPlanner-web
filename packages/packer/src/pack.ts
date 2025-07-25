@@ -18,14 +18,14 @@ if (!tag) {
   process.exit(1);
 }
 
-const product = process.argv[3] === "lastepoch" ? 1 : undefined;
+const product = process.argv[3] === "le" ? 1 : undefined;
 if (!product) {
   console.error("Invalid target");
   process.exit(1);
 }
 
 const buildDir = `build/${product}/${tag}`;
-const remote = "https://github.com/Musholic/PathOfBuildingForLastEpoch.git";
+const remote = "https://github.com/Musholic/LastEpochPlanner.git";
 const repoDir = `${buildDir}/repo`;
 
 if (clone) {
@@ -68,7 +68,7 @@ for (const file of shelljs.find(basePath)) {
     shelljs.cp(file, dest);
   }
 
-  if (path.extname(file) === ".json" || path.extname(file) === ".lua" || path.extname(file) === ".zip" || path.extname(file).startsWith(".part")) {
+  if (path.extname(file) === ".lua" || path.extname(file) === ".zip" || path.extname(file).startsWith(".part") || path.extname(file).startsWith(".json")) {
     const content = fs.readFileSync(file);
 
     // patching
@@ -110,6 +110,14 @@ zip.addFile("LICENSE.md", fs.readFileSync(`${repoDir}/LICENSE.md`));
 
 zip.writeZip(`${buildDir}/r2/root.zip`);
 zip.extractAllTo(rootDir, true);
+
+// For development, put the root.zip (and its extracted contents) where it is expected
+const devBuildDir = `build.${product}/${tag}`;
+shelljs.mkdir("-p", devBuildDir);
+shelljs.cp(`${buildDir}/r2/root.zip`, devBuildDir);
+
+const devRootDir = `${devBuildDir}/root`;
+zip.extractAllTo(devRootDir, true);
 
 function ddsSize(file: string) {
   const data = zstd.decompress(fs.readFileSync(file));

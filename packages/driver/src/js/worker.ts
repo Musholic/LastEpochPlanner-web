@@ -203,7 +203,7 @@ export class DriverWorker {
         namespace: fileSystemConfig.cloudflareKvUserNamespace,
       });
 
-      const pobUserDir = "/user/Path of Building for Last Epoch";
+      const pobUserDir = "/user/Last Epoch Planner";
 
       const cloudDir = `${pobUserDir}/Builds/Cloud`;
       if (!(await zenfs.promises.exists(cloudDir))) await zenfs.promises.mkdir(cloudDir, { recursive: true });

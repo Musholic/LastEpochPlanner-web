@@ -9,7 +9,7 @@ if (!tag) {
   process.exit(1);
 }
 
-const product = process.argv[3] === "lastepoch" ? 1 : undefined;
+const product = process.argv[3] === "le" ? 1 : undefined;
 if (!product) {
   console.error("Invalid target");
   process.exit(1);
