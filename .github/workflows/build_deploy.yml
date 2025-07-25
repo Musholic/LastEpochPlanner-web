@@ -43,12 +43,12 @@ jobs:
             const fs = require('fs');
             
             const versions = JSON.parse(fs.readFileSync(process.env.VERSION_FILE, 'utf8'));
-            return versions["lastepoch"].head;
+            return versions["le"].head;
 
       - name: "Pack last version"
         env:
           LATEST_TAG: ${{ steps.get_release.outputs.result }}
-        run: npm run pack -w packages/packer $LATEST_TAG lastepoch clone
+        run: npm run pack -w packages/packer $LATEST_TAG le clone
 
       - name: "Assemble"
         env:
