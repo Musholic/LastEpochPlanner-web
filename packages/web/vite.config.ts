@@ -9,7 +9,7 @@ const packerBuildDir = path.resolve(__dirname, "../packer/build");
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  base: "/pob-web/",
+  base: "/",
   server: {
     host: true,
     proxy: {
@@ -30,7 +30,7 @@ export default defineConfig(({ mode }) => ({
   define: {
     APP_VERSION: JSON.stringify(process.env.npm_package_version),
     __VERSION_URL__: JSON.stringify(
-      mode === "development" ? `/@fs/${rootDir}/version.json` : "/pob-web/version.json",
+      mode === "development" ? `/@fs/${rootDir}/version.json` : "/version.json",
     ),
     __ASSET_PREFIX__: JSON.stringify(
       mode === "development" ? `/@fs/${packerBuildDir}` : "versions",

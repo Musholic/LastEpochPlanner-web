@@ -14,7 +14,7 @@ export default defineConfig(({ mode }) => ({
   },
   define: {
     __ASSET_PREFIX__: JSON.stringify(
-      mode === "development" ? `/@fs/${packerBuildDir}` : "https://musholic.github.io/pob-web/versions",
+      mode === "development" ? `/@fs/${packerBuildDir}` : "/versions",
     ),
     __RUN_GAME__: JSON.stringify(process.env.RUN_GAME ?? "le"),
     __RUN_VERSION__: JSON.stringify(process.env.RUN_VERSION ?? "v0.5.1"),

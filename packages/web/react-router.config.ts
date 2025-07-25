@@ -2,6 +2,5 @@ import type { Config } from "@react-router/dev/config";
 
 export default {
   appDirectory: "src",
-  ssr: false,
-  basename: "/pob-web"
+  ssr: false
 } satisfies Config;
