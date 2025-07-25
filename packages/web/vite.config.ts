@@ -33,7 +33,7 @@ export default defineConfig(({ mode }) => ({
       mode === "development" ? `/@fs/${rootDir}/version.json` : "/pob-web/version.json",
     ),
     __ASSET_PREFIX__: JSON.stringify(
-      mode === "development" ? `/@fs/${packerBuildDir}` : "https://asset.pob.cool/versions",
+      mode === "development" ? `/@fs/${packerBuildDir}` : "versions",
     ),
   },
   worker: {
