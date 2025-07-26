@@ -77,9 +77,9 @@ export default function Index({ loaderData }: Route.ComponentProps) {
         <div className="hero-overlay backdrop-blur-xs" />
         <div className="hero-content text-center flex flex-col items-center z-10">
           <div className="max-w-md">
-            <h1 className="text-5xl font-bold mb-5">pob.cool</h1>
+            <h1 className="text-5xl font-bold mb-5">lastepochplanner.com</h1>
             <p className="mb-5 text-xl">
-              The web version of Path of Building for Last Epoch. Explore and save your builds anywhere, anytime.
+              The web version of Last Epoch Planner.
             </p>
           </div>
 
@@ -175,15 +175,19 @@ export default function Index({ loaderData }: Route.ComponentProps) {
       <footer className="footer footer-center flex items-center p-8 bg-base-300 text-base-content">
         <aside className="flex-1">
           <span>
+            © 2025 Musholic (
+            <a className="link" href="https://github.com/musholic" target="_blank" rel="noreferrer">
+              @musholic
+            </a> )
             © 2025 Koji AGAWA (
             <a className="link" href="https://x.com/atty303" target="_blank" rel="noreferrer">
               @atty303
             </a>
-            ) - This product isn't affiliated with or endorsed by Grinding Gear Games in any way.
+            ) - This product isn't affiliated with or endorsed by Eleventh Hour Games in any way.
           </span>
         </aside>
         <div className="flex-none">
-          <a href="https://github.com/atty303/poe-web" target="_blank" rel="noreferrer">
+          <a href="https://github.com/musholic/pob-web" target="_blank" rel="noreferrer">
             <svg className="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 98 96">
               <title>GitHub</title>
               <path

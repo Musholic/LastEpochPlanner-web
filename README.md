@@ -1,12 +1,14 @@
-# pob.cool - Path of Building for browser environment
+# lastepochplanner.com - Last Epoch Planner for browser environment
 
 [![wakatime](https://wakatime.com/badge/user/018dace5-5642-4ac8-88a7-2ec0a867f8a7/project/fa7418b8-8ddb-479c-805b-ce2043f24d24.svg)](https://wakatime.com/badge/user/018dace5-5642-4ac8-88a7-2ec0a867f8a7/project/fa7418b8-8ddb-479c-805b-ce2043f24d24)
 
-This is browser version of [Path of Building for Last Epoch](https://github.com/Musholic/PathOfBuildingForLastEpoch).
+This is browser version of [Last Epoch Planner](https://github.com/Musholic/LastEpochPlanner).
 
 ## Features
 
-- Run the PoB in your browser, that's all.
+- Run Last Epoch Planner in your browser, that's all.
+
+Not implemented yet:
 - You can select the version of the PoB to run.
 - Saved builds are stored in the browser's local storage.
    - The `Cloud` folder appears when you are logged into the site. Builds saved there are stored in the cloud and can be accessed from anywhere.

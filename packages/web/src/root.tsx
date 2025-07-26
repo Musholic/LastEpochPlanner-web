@@ -42,16 +42,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <head>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=1280, initial-scale=1.0" />
-        <title>pob.cool</title>
-        <meta property="og:title" content="pob.cool" />
+        <title>lastepochplanner.com</title>
+        <meta property="og:title" content="lastepochplanner.com" />
         <meta property="og:description" content="A web version of Path of Building for Last Epoch" />
-        <meta property="og:image" content="https://pob.cool/favicon.png" />
-        <meta property="og:url" content="https://pob.cool" />
+        <meta property="og:image" content="https://lastepochplanner.com/favicon.png" />
+        <meta property="og:url" content="https://lastepochplanner.com" />
         <meta property="og:type" content="website" />
         <meta property="og:locale" content="en_US" />
-        <meta name="twitter:card" content="summary" />
-        <meta name="twitter:site" content="@atty303" />
-        <meta name="twitter:creator" content="@atty303" />
         <Meta />
         <Links />
       </head>
@@ -134,7 +131,7 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
           <Link to="/" className="btn btn-primary">
             Go back home
           </Link>
-          <a href="https://github.com/atty303/pob-web/issues" className="btn btn-sm btn-neutral btn-ghost">
+          <a href="https://github.com/musholic/pob-web/issues" className="btn btn-sm btn-neutral btn-ghost">
             File an issue <span aria-hidden="true">&rarr;</span>
           </a>
         </div>
