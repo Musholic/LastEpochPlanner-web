@@ -12,11 +12,7 @@ import { Driver } from "./driver";
     },
     onTitleChange: _title => {},
   });
-  await driver.start({
-    cloudflareKvPrefix: "/api/kv/",
-    cloudflareKvAccessToken: undefined,
-    cloudflareKvUserNamespace: undefined,
-  });
+  await driver.start();
   const window = document.querySelector("#window") as HTMLElement;
   if (window) {
     driver.attachToDOM(window);

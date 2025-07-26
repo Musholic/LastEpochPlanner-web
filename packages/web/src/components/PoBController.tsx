@@ -1,4 +1,3 @@
-import { useAuth0 } from "@auth0/auth0-react";
 import {
   ArrowRightEndOnRectangleIcon,
   ArrowRightStartOnRectangleIcon,
@@ -126,20 +125,10 @@ function Sidebar(p: {
           </span>
         </header>
         <ul className="menu w-full">
-          <ul className="menu w-full">
-            <li className="pointer-events-none bg-base-300">
-              <Auth tutorial={!p.optOutTutorial} />
-            </li>
-          </ul>
           <li className="menu-title mt-2">Navigation</li>
           <li>
             <Link to="/">
               <HomeIcon className="size-4" /> Return to home
-            </Link>
-          </li>
-          <li className={p.isHead ? "menu-disabled" : undefined}>
-            <Link to={`/${p.game}/`}>
-              <ArrowUpIcon className="size-4" /> Change to latest version
             </Link>
           </li>
           <li className="menu-title">Preferences</li>
@@ -223,45 +212,6 @@ function Sidebar(p: {
       </div>
     </div>
   );
-}
-
-function Auth(p: { tutorial: boolean }) {
-  const { loginWithRedirect, logout, user, isAuthenticated, isLoading } = useAuth0();
-
-  if (isLoading) {
-    return (
-      <div className="place-content-center p-2">
-        <span className="loading loading-spinner loading-md" />
-      </div>
-    );
-  } else if (isAuthenticated) {
-    return (
-      <div>
-        <UserCircleIcon className="size-6" />
-        {user?.name}
-        <button className="btn btn-primary pointer-events-auto" type="button" onClick={() => logout()}>
-          <ArrowRightStartOnRectangleIcon className="size-4" />
-          Logout
-        </button>
-      </div>
-    );
-  } else {
-    return (
-      <div
-        className={`tooltip tooltip-right tooltip-info ${p.tutorial && "tooltip-open"}`}
-        data-tip="You can save your builds to the cloud by logging in."
-      >
-        <button
-          className="btn btn-primary btn-block pointer-events-auto"
-          type="button"
-          onClick={() => loginWithRedirect()}
-        >
-          <ArrowRightEndOnRectangleIcon className="size-4" />
-          Login
-        </button>
-      </div>
-    );
-  }
 }
 
 function PerformanceView(p: { frames: { at: number; renderTime: number }[] }) {

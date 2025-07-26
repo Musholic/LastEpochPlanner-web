@@ -4,12 +4,6 @@ import { UIEventManager } from "./event";
 import type { DriverWorker, HostCallbacks } from "./worker";
 import WorkerObject from "./worker?worker";
 
-export type FilesystemConfig = {
-  cloudflareKvPrefix: string;
-  cloudflareKvAccessToken: string | undefined;
-  cloudflareKvUserNamespace: string | undefined;
-};
-
 export class Driver {
   private isStarted = false;
   private uiEventManager: UIEventManager | undefined;
@@ -24,7 +18,7 @@ export class Driver {
     readonly hostCallbacks: HostCallbacks,
   ) {}
 
-  async start(fileSystemConfig: FilesystemConfig) {
+  async start() {
     if (this.isStarted) throw new Error("Already started");
     this.isStarted = true;
 
@@ -34,7 +28,6 @@ export class Driver {
     return this.driverWorker.start(
       this.build,
       this.assetPrefix,
-      fileSystemConfig,
       Comlink.proxy(this.hostCallbacks.onError),
       Comlink.proxy(this.hostCallbacks.onFrame),
       Comlink.proxy(this.hostCallbacks.onFetch),

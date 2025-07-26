@@ -1,4 +1,3 @@
-import { useAuth0 } from "@auth0/auth0-react";
 import { Driver } from "pob-driver/src/js/driver";
 import { useCallback, useEffect, useRef, useState } from "react";
 import * as use from "react-use";
@@ -12,20 +11,7 @@ export default function PoBWindow(props: {
   onFrame: (at: number, time: number) => void;
   onTitleChange: (title: string) => void;
 }) {
-  const auth0 = useAuth0();
-
   const container = useRef<HTMLDivElement>(null);
-
-  const [token, setToken] = useState<string>();
-  useEffect(() => {
-    async function getToken() {
-      if (auth0.isAuthenticated) {
-        const t = await auth0.getAccessTokenSilently();
-        setToken(t);
-      }
-    }
-    getToken();
-  }, [auth0, auth0.isAuthenticated]);
 
   const onFrame = useCallback(props.onFrame, []);
   const onTitleChange = useCallback(props.onTitleChange, []);
@@ -86,11 +72,7 @@ export default function PoBWindow(props: {
 
     (async () => {
       try {
-        await _driver.start({
-          cloudflareKvPrefix: "/api/kv",
-          cloudflareKvAccessToken: token,
-          cloudflareKvUserNamespace: undefined,
-        });
+        await _driver.start();
         log.debug(tag.pob, "started", container.current);
         if (buildCode) {
           log.info(tag.pob, "loading build from ", buildCode);
@@ -109,7 +91,7 @@ export default function PoBWindow(props: {
       _driver.destory();
       setLoading(true);
     };
-  }, [props.product, props.version, onFrame, onTitleChange, token, buildCode]);
+  }, [props.product, props.version, onFrame, onTitleChange, buildCode]);
 
   if (error) {
     log.error(tag.pob, error);

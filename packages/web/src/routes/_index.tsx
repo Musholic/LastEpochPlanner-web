@@ -106,8 +106,9 @@ export default function Index({ loaderData }: Route.ComponentProps) {
         <div role="alert" className="max-w-4xl mx-auto alert alert-warning prose">
           <ul>
             <li>
-              Network access is through our CORS proxy, so all users have the same source IP. This will likely cause
-              rate limiting.
+              Offline and Online import are not possible at the moment. 
+              <br/>
+              You either have to start from scratch, or you can copy paste the whole build code (generated from the tool)
             </li>
           </ul>
         </div>
@@ -120,34 +121,16 @@ export default function Index({ loaderData }: Route.ComponentProps) {
           Key Features
         </h2>
         <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Feature 1: Original PoB in Your Browser */}
+          {/* Feature 1: Original LEP in Your Browser */}
           <div className="card bg-base-200 shadow-md p-4 rounded-box">
             <div className="flex items-center mb-2">
               <GlobeAltIcon className="h-8 w-8 text-accent mr-2" />
-              <h3 className="text-xl font-semibold">Original PoB in Your Browser</h3>
+              <h3 className="text-xl font-semibold">Original Last Epoch Planner in Your Browser</h3>
             </div>
-            <p>Enjoy the full functionality of the original Path of Building for Last Epoch without installing anything locally.</p>
+            <p>Enjoy the full functionality of the original Last Epoch Planner without installing anything locally.</p>
           </div>
 
-          {/* Feature 2: Switch Between PoB Versions */}
-          <div className="card bg-base-200 shadow-md p-4 rounded-box">
-            <div className="flex items-center mb-2">
-              <ArrowPathIcon className="h-8 w-8 text-accent mr-2" />
-              <h3 className="text-xl font-semibold">Switch Between PoB Versions</h3>
-            </div>
-            <p>Quickly revert to older PoB builds or try the latest beta—all within a few clicks.</p>
-          </div>
-
-          {/* Feature 3: Cloud Saving */}
-          <div className="card bg-base-200 shadow-md p-4 rounded-box">
-            <div className="flex items-center mb-2">
-              <CloudIcon className="h-8 w-8 text-accent mr-2" />
-              <h3 className="text-xl font-semibold">Cloud Saving</h3>
-            </div>
-            <p>Store your builds in the cloud, and access them from any device.</p>
-          </div>
-
-          {/* Feature 4: Available Anywhere */}
+          {/* Feature 2: Available Anywhere */}
           <div className="card bg-base-200 shadow-md p-4 rounded-box">
             <div className="flex items-center mb-2">
               <DeviceTabletIcon className="h-8 w-8 text-accent mr-2" />
@@ -155,19 +138,6 @@ export default function Index({ loaderData }: Route.ComponentProps) {
             </div>
             <p>Access your builds through modern browsers (Chrome, Firefox, Safari) on multiple platforms.</p>
           </div>
-        </div>
-      </section>
-
-      {/* Version Lists Section with Tables */}
-      <section className="py-10 px-4 bg-base-200 flex-grow">
-        <h2 className="text-3xl font-bold text-center mb-8">
-          <ArchiveBoxIcon className="size-8 mr-2 inline text-accent" />
-          Available Versions
-        </h2>
-
-        <div className="max-w-4xl mx-auto flex flex-col md:flex-row gap-8">
-          {/* Last Epoch Versions Table */}
-          {versionTable("le")}
         </div>
       </section>
 

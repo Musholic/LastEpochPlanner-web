@@ -5,9 +5,7 @@ import * as zenfs from "@zenfs/core";
 import { fs, Fetch } from "@zenfs/core";
 import { WebAccess } from "@zenfs/dom";
 import * as Comlink from "comlink";
-import type { FilesystemConfig } from "./driver";
 import type { UIState } from "./event";
-import { CloudflareKV } from "./fs";
 import { ImageRepository } from "./image";
 import { log, tag } from "./logger";
 // @ts-ignore
@@ -135,7 +133,6 @@ export class DriverWorker {
   async start(
     build: "debug" | "release",
     assetPrefix: string,
-    fileSystemConfig: FilesystemConfig,
     onError: HostCallbacks["onError"],
     onFrame: HostCallbacks["onFrame"],
     onFetch: HostCallbacks["onFetch"],
@@ -194,24 +191,6 @@ export class DriverWorker {
     });
 
     await printFileSystemTree("/lib");
-
-    if (fileSystemConfig.cloudflareKvAccessToken) {
-      const kvFs = await zenfs.resolveMountConfig({
-        backend: CloudflareKV,
-        prefix: fileSystemConfig.cloudflareKvPrefix,
-        token: fileSystemConfig.cloudflareKvAccessToken,
-        namespace: fileSystemConfig.cloudflareKvUserNamespace,
-      });
-
-      const pobUserDir = "/user/Last Epoch Planner";
-
-      const cloudDir = `${pobUserDir}/Builds/Cloud`;
-      if (!(await zenfs.promises.exists(cloudDir))) await zenfs.promises.mkdir(cloudDir, { recursive: true });
-      zenfs.mount(cloudDir, kvFs);
-
-      const publicDir = `${cloudDir}/Public`;
-      if (!(await zenfs.promises.exists(publicDir))) await zenfs.promises.mkdir(publicDir);
-    }
 
     Object.assign(module, this.exports(module));
     this.imports = this.resolveImports(module);

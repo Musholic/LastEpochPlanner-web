@@ -1,6 +1,5 @@
 import "./app.css";
 
-import { Auth0Provider } from "@auth0/auth0-react";
 import * as Sentry from "@sentry/react";
 import type React from "react";
 import { useState } from "react";
@@ -65,21 +64,7 @@ export function HydrateFallback() {}
 
 export default function Root() {
   return (
-    <Auth0Provider
-      domain="pob-web.us.auth0.com"
-      clientId="o8TOT9gDHzztbdIIIV54HxlfaSMFYTeH"
-      legacySameSiteCookie={false}
-      useRefreshTokens={true}
-      useRefreshTokensFallback={true}
-      cacheLocation={"localstorage"}
-      authorizationParams={{
-        redirect_uri: window.location.origin,
-        audience: "https://pob.cool/api",
-        scope: "openid profile email offline_access",
-      }}
-    >
       <Outlet />
-    </Auth0Provider>
   );
 }
 
