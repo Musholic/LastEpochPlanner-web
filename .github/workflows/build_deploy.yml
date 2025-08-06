@@ -25,6 +25,7 @@ jobs:
 
       - uses: mymindstorm/setup-emsdk@v14
         with:
+          version: 4.0.11
           actions-cache-folder: .emsdk-cache
 
       - name: "Install dependencies"
