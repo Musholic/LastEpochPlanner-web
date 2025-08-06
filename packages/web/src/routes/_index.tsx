@@ -141,6 +141,17 @@ export default function Index({ loaderData }: Route.ComponentProps) {
         </div>
       </section>
 
+      {/* Pob.cool Section */}
+      <section className="py-10 px-4 bg-base-100">
+        <h2 className="text-3xl font-bold text-center mb-6">
+          <a href="https://pob.cool">pob.cool</a>
+        </h2>
+        <div>
+          <p>The web version of Last Epoch Planner is based on the original work done by Koji AGAWA (@atty303) for <a href="https://pob.cool">pob.cool</a>.</p>
+          <p>Last Epoch Planner will also be available on <a href="https://pob.cool">pob.cool</a> with additional features like cloud save and access to old versions.</p>
+        </div>
+      </section>
+
       {/* Footer */}
       <footer className="footer footer-center flex items-center p-8 bg-base-300 text-base-content">
         <aside className="flex-1">
