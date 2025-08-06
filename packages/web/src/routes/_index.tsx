@@ -167,6 +167,9 @@ export default function Index({ loaderData }: Route.ComponentProps) {
             ) - This product isn't affiliated with or endorsed by Eleventh Hour Games in any way.
           </span>
         </aside>
+        <div>
+          <a href="privacy">Privacy policy</a>
+        </div>
         <div className="flex-none">
           <a href="https://github.com/musholic/pob-web" target="_blank" rel="noreferrer">
             <svg className="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 98 96">

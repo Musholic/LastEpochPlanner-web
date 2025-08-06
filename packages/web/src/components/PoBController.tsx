@@ -208,6 +208,9 @@ function Sidebar(p: {
               )
             </p>
           </aside>
+          <div>
+            <a href="privacy">Privacy policy</a>
+          </div>
         </footer>
       </div>
     </div>
