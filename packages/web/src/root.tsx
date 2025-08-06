@@ -43,13 +43,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta name="viewport" content="width=1280, initial-scale=1.0" />
         <title>lastepochplanner.com</title>
         <meta property="og:title" content="lastepochplanner.com" />
-        <meta property="og:description" content="A web version of Path of Building for Last Epoch" />
+        <meta property="og:description" content="A web version of Last Epoch Planner" />
         <meta property="og:image" content="https://lastepochplanner.com/favicon.png" />
         <meta property="og:url" content="https://lastepochplanner.com" />
         <meta property="og:type" content="website" />
         <meta property="og:locale" content="en_US" />
         <Meta />
         <Links />
+        <script defer data-domain="lastepochplanner.com" src="https://plausible.lastepochplanner.com/js/script.js"></script>
       </head>
       <body className="bg-base text-base-content h-full">
         {children}
