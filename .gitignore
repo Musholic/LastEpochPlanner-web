@@ -10,3 +10,6 @@ build.*/
 .env*
 .wrangler
 .react-router/
+!.envrc
+.devenv*
+devenv.lock
