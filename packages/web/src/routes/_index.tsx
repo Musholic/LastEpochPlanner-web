@@ -86,13 +86,17 @@ export default function Index({ loaderData }: Route.ComponentProps) {
           {/* Last Epoch Start Buttons */}
           <div className="flex flex-col md:flex-row gap-8 mt-4">
             {/* LE Card */}
-            <div className="card w-64 bg-base-100 shadow-md p-4 transition-shadow hover:shadow-lg">
+            <div className="card w-84 bg-base-100 shadow-md p-4 transition-shadow hover:shadow-lg">
               <span className="min-h-44">
                 <img src="/logo-le.png" alt="Last Epoch" className="mx-auto mb-4" />
               </span>
               <Link to="/le" className="btn btn-primary btn-block">
-                Start for Last Epoch <ArrowRightIcon className="size-4" />
+                Start in browser <ArrowRightIcon className="size-4" />
               </Link>
+              <br/>
+              <a href="https://github.com/Musholic/LastEpochPlanner/releases">
+                Download desktop releases...
+              </a>
             </div>
           </div>
         </div>
@@ -146,7 +150,7 @@ export default function Index({ loaderData }: Route.ComponentProps) {
         <h2 className="text-3xl font-bold text-center mb-6">
           <a href="https://pob.cool">pob.cool</a>
         </h2>
-        <div>
+        <div className="text-center">
           <p>The web version of Last Epoch Planner is based on the original work done by Koji AGAWA (@atty303) for <a href="https://pob.cool">pob.cool</a>.</p>
           <p>Last Epoch Planner will also be available on <a href="https://pob.cool">pob.cool</a> with additional features like cloud save and access to old versions.</p>
         </div>
