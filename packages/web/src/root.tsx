@@ -50,7 +50,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta property="og:locale" content="en_US" />
         <Meta />
         <Links />
-        <script defer data-domain="lastepochplanner.com" src="https://plausible.lastepochplanner.com/js/script.js"></script>
+        <script defer data-domain="lastepochplanner.com" src="https://plausible.lastepochplanner.com/js/script.outbound-links.js"></script>
       </head>
       <body className="bg-base text-base-content h-full">
         {children}
