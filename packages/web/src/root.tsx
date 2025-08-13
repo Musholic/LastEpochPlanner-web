@@ -41,8 +41,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <head>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=1280, initial-scale=1.0" />
-        <title>lastepochplanner.com</title>
-        <meta property="og:title" content="lastepochplanner.com" />
+        <title>Last Epoch Planner Web</title>
+        <meta property="og:title" content="Last Epoch Planner Web" />
         <meta property="og:description" content="A web version of Last Epoch Planner" />
         <meta property="og:image" content="https://lastepochplanner.com/favicon.png" />
         <meta property="og:url" content="https://lastepochplanner.com" />

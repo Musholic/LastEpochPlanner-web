@@ -21,7 +21,7 @@ const { useTimeoutFn, useLocalStorage, useFullscreen, useTitle } = use;
 
 export default function PoBController(p: { game: keyof Games; version: string; isHead: boolean }) {
   const [title, setTitle] = useState<string>();
-  useTitle(title ?? "lastepochplanner.com");
+  useTitle(title ?? "Last Epoch Planner Web");
 
   const container = useRef<HTMLDivElement>(null);
 
@@ -117,7 +117,7 @@ function Sidebar(p: {
       <div className="min-h-full h-dvh bg-base-200 text-base-content w-80 grid grid-cols-1 grid-rows-[auto_1fr_auto_auto]">
         <header className="flex items-center gap-2 p-4">
           <img className="w-6 h-6 rounded-box" src="/favicon.png" alt="" />
-          <span className="text-xl font-['Poiret_One'] ">lastepochplanner.com</span>
+          <span className="text-xl font-['Poiret_One'] ">Last Epoch Planner Web</span>
           <span className="flex-1 text-right">
             <button className="btn btn-circle btn-xs btn-ghost" type="button" onClick={() => p.setDrawer(false)}>
               <XMarkIcon className="size-6" />

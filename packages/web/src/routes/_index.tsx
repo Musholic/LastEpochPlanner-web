@@ -76,8 +76,8 @@ export default function Index({ loaderData }: Route.ComponentProps) {
       <section className="hero min-h-160" style={{ backgroundImage: "url('/hero-bg.webp')" }}>
         <div className="hero-overlay backdrop-blur-xs" />
         <div className="hero-content text-center flex flex-col items-center z-10">
-          <div className="max-w-md">
-            <h1 className="text-5xl font-bold mb-5">lastepochplanner.com</h1>
+          <div>
+            <h1 className="text-5xl font-bold mb-5">Last Epoch Planner Web</h1>
             <p className="mb-5 text-xl">
               The web version of Last Epoch Planner.
             </p>
@@ -110,7 +110,7 @@ export default function Index({ loaderData }: Route.ComponentProps) {
         <div role="alert" className="max-w-4xl mx-auto alert alert-warning prose">
           <ul>
             <li>
-              Offline and Online import are not possible at the moment. 
+              Offline and online import are not possible at the moment. However, online import is possible on <a href="https://pob.cool">pob.cool</a> in the meantime.
               <br/>
               You either have to start from scratch, or you can copy paste the whole build code (generated from the tool)
             </li>
@@ -152,7 +152,7 @@ export default function Index({ loaderData }: Route.ComponentProps) {
         </h2>
         <div className="text-center">
           <p>The web version of Last Epoch Planner is based on the original work done by Koji AGAWA (@atty303) for <a href="https://pob.cool">pob.cool</a>.</p>
-          <p>Last Epoch Planner will also be available on <a href="https://pob.cool">pob.cool</a> with additional features like cloud save and access to old versions.</p>
+          <p>Last Epoch Planner is also available on <a href="https://pob.cool">pob.cool</a> with additional features like online import support, cloud save, and access to old versions.</p>
         </div>
       </section>
 

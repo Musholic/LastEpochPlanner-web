@@ -5,8 +5,8 @@ export default function Index() {
       <section className="hero">
         <div className="hero-overlay backdrop-blur-xs" />
         <div className="hero-content text-center flex flex-col items-center z-10">
-          <div className="max-w-md">
-            <h1 className="text-5xl font-bold mb-5"><a href="/">lastepochplanner.com</a></h1>
+          <div>
+            <h1 className="text-5xl font-bold mb-5"><a href="/">Last Epoch Planner Web</a></h1>
             <p className="mb-5 text-xl">
               The web version of Last Epoch Planner.
             </p>
