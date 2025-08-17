@@ -165,20 +165,6 @@ jobs:
 
             return newTags.length > 0 ? newTags : null;
 
-      - name: Pack new versions
-        if: steps.new_versions.outputs.result != 'null'
-        env:
-          NEW_TAGS: ${{ steps.new_versions.outputs.result }}
-          MISE_SOPS_STRICT: "false"
-          MISE_ENV: pob-cool
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const newTags = JSON.parse(process.env.NEW_TAGS);
-            for (const tag of newTags) {
-              await exec.exec(`mise run pack --game ${process.env.GAME} --tag ${tag.name}`);
-            }
-
       - name: Update version.json
         if: steps.new_versions.outputs.result != 'null'
         env:
