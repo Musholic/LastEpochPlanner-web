@@ -127,7 +127,7 @@ export default function PoBWindow(props: {
       driverRef.current = null;
       setLoading(true);
     };
-  }, [props.game, props.version, token, buildCode]);
+  }, [props.game, props.version, buildCode]);
 
   if (error) {
     log.error(tag.pob, error);

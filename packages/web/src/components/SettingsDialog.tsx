@@ -1,4 +1,3 @@
-import { useAuth0 } from "@auth0/auth0-react";
 import { ArrowTopRightOnSquareIcon, ChartBarIcon, HomeIcon, UserIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { forwardRef } from "react";
 
@@ -10,7 +9,6 @@ interface SettingsDialogProps {
 
 export const SettingsDialog = forwardRef<HTMLDialogElement, SettingsDialogProps>(
   ({ performanceVisible, onPerformanceToggle }, ref) => {
-    const { loginWithRedirect, logout, user, isAuthenticated, isLoading } = useAuth0();
     const closeDialog = () => {
       if (ref && typeof ref !== "function" && ref.current) {
         ref.current.close();
@@ -23,7 +21,7 @@ export const SettingsDialog = forwardRef<HTMLDialogElement, SettingsDialogProps>
           <div className="pw:flex pw:items-center pw:justify-between pw:mb-4 pw:pb-2 pw:border-b pw:border-base-300">
             <div className="pw:flex pw:items-center pw:gap-2">
               <img className="pw:w-5 pw:h-5 pw:rounded" src="/favicon.png" alt="" />
-              <span className="pw:text-lg pw:font-['Poiret_One']">pob.cool</span>
+              <span className="pw:text-lg pw:font-['Poiret_One']">Last Epoch Planner Web</span>
             </div>
             <button type="button" onClick={closeDialog} className="pw:btn pw:btn-circle pw:btn-xs pw:btn-ghost">
               <XMarkIcon className="pw:size-4" />
@@ -31,58 +29,6 @@ export const SettingsDialog = forwardRef<HTMLDialogElement, SettingsDialogProps>
           </div>
 
           <div className="pw:space-y-5">
-            <div className="pw:space-y-3">
-              <h3 className="pw:text-sm pw:font-semibold pw:text-base-content/80 pw:mb-3">Account</h3>
-
-              {isLoading ? (
-                <div className="pw:flex pw:items-center pw:gap-3 pw:p-3 pw:rounded-lg pw:bg-base-100">
-                  <div className="pw:loading pw:loading-spinner pw:loading-sm" />
-                  <span className="pw:text-sm pw:text-base-content/70">Loading account...</span>
-                </div>
-              ) : isAuthenticated ? (
-                <div className="pw:flex pw:items-center pw:gap-3 pw:p-3 pw:rounded-xl pw:bg-base-100 pw:border-2 pw:border-success">
-                  <div className="pw:w-8 pw:h-8 pw:rounded-full pw:bg-success pw:flex pw:items-center pw:justify-center">
-                    <UserIcon className="pw:size-4 pw:text-success-content" />
-                  </div>
-                  <div className="pw:flex-1 pw:min-w-0">
-                    <div className="pw:text-sm pw:font-semibold pw:text-base-content">Signed in</div>
-                    {user?.name && <div className="pw:text-xs pw:text-base-content/70 pw:truncate">{user.name}</div>}
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      logout();
-                      closeDialog();
-                    }}
-                    className="pw:btn pw:btn-ghost pw:btn-xs pw:text-xs"
-                    title="Sign out"
-                  >
-                    Sign out
-                  </button>
-                </div>
-              ) : (
-                <div className="pw:flex pw:items-center pw:gap-3 pw:p-3 pw:rounded-xl pw:bg-base-200/50 pw:border-2 pw:border-base-300/50 pw:border-dashed">
-                  <div className="pw:w-8 pw:h-8 pw:rounded-full pw:bg-base-300 pw:flex pw:items-center pw:justify-center">
-                    <UserIcon className="pw:size-4 pw:text-base-content/60" />
-                  </div>
-                  <div className="pw:flex-1 pw:min-w-0">
-                    <div className="pw:text-sm pw:font-semibold pw:text-base-content">Not signed in</div>
-                    <div className="pw:text-xs pw:text-base-content/70">Sync builds across devices</div>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      loginWithRedirect();
-                      closeDialog();
-                    }}
-                    className="pw:btn pw:btn-primary pw:btn-xs pw:text-xs"
-                    title="Sign in to sync your builds"
-                  >
-                    Sign in
-                  </button>
-                </div>
-              )}
-            </div>
 
             <div className="pw:space-y-3">
               <h3 className="pw:text-sm pw:font-semibold pw:text-base-content/80 pw:mb-3">Navigation</h3>
@@ -134,9 +80,14 @@ export const SettingsDialog = forwardRef<HTMLDialogElement, SettingsDialogProps>
                 </a>
               </p>
             </div>
-
             <div className="pw:pt-3 pw:border-t pw:border-base-300 pw:text-xs pw:text-base-content/60 pw:space-y-1">
-              <p>This product isn't affiliated with or endorsed by Grinding Gear Games.</p>
+              <p>This product isn't affiliated with or endorsed by Eleventh Hour Games in any way.</p>
+              <p>
+                © 2025 Musholic (
+                <a className="link" href="https://github.com/musholic" target="_blank" rel="noreferrer">
+                  @musholic
+                </a> )
+              </p>
               <p>
                 © 2025 Koji AGAWA (
                 <a className="pw:link" href="https://x.com/atty303" target="_blank" rel="noreferrer">
@@ -144,6 +95,9 @@ export const SettingsDialog = forwardRef<HTMLDialogElement, SettingsDialogProps>
                 </a>
                 )
               </p>
+            </div>
+            <div>
+              <a href="privacy">Privacy policy</a>
             </div>
           </div>
         </div>
