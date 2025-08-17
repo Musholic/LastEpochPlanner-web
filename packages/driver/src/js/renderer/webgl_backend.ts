@@ -1,6 +1,7 @@
 import { Format, Target } from "dds/src";
 import { TextureFlags } from "../image";
 import { log, tag } from "../logger";
+import type { RenderBackend } from "./backend";
 import type { TextureBitmap } from "./renderer";
 import { type FormatDesc, glFormatFor } from "./webgl";
 
@@ -9,7 +10,7 @@ uniform mat4 u_MvpMatrix;
 
 in vec2 a_Position;
 in vec2 a_TexCoord;
-in vec4 a_TintColor;
+in uint a_TintColor; // Packed RGBA as uint32
 in vec4 a_Viewport;
 in vec3 a_TexId;
 
@@ -21,7 +22,12 @@ out vec3 v_TexId;
 
 void main(void) {
     v_TexCoord = a_TexCoord;
-    v_TintColor = a_TintColor;
+    v_TintColor = vec4(
+        float((a_TintColor >> 24u) & 0xFFu) / 255.0,
+        float((a_TintColor >> 16u) & 0xFFu) / 255.0,
+        float((a_TintColor >> 8u) & 0xFFu) / 255.0,
+        float(a_TintColor & 0xFFu) / 255.0
+    );
     v_TexId = a_TexId;
     vec2 vp0 = a_Viewport.xy + vec2(0.0, a_Viewport.w);
     vec2 vp1 = a_Viewport.xy + vec2(a_Viewport.z, 0.0);
@@ -147,25 +153,66 @@ function orthoMatrix(left: number, right: number, bottom: number, top: number, n
 }
 
 class VertexBuffer {
-  private _buffer: Float32Array;
-  private offset: number;
+  private _buffer: ArrayBuffer;
+  private _floatView: Float32Array;
+  private _uintView: Uint32Array;
+  private _indices: Uint16Array;
+  private vertexOffset: number;
+  private indexOffset: number;
+  private quadCount: number;
+  private static readonly VERTEX_SIZE = 12; // 12 floats per vertex (reduced from 15)
 
   constructor() {
-    // TODO: Use a dynamic buffer
-    this._buffer = new Float32Array(1024 * 1024);
-    this.offset = 0;
+    this._buffer = new ArrayBuffer(1024 * 1024 * 4);
+    this._floatView = new Float32Array(this._buffer);
+    this._uintView = new Uint32Array(this._buffer);
+    this._indices = new Uint16Array(1024 * 1024);
+    this.vertexOffset = 0;
+    this.indexOffset = 0;
+    this.quadCount = 0;
   }
 
   get buffer() {
-    return new Float32Array(this._buffer.buffer, 0, this.offset);
+    return new Uint8Array(this._buffer, 0, this.vertexOffset * 4);
   }
 
-  get length() {
-    return this.offset / 15;
+  get indices() {
+    return new Uint16Array(this._indices.buffer, 0, this.indexOffset);
   }
 
-  push(
-    i: number,
+  get vertexCount() {
+    return this.vertexOffset / VertexBuffer.VERTEX_SIZE;
+  }
+
+  get indexCount() {
+    return this.indexOffset;
+  }
+
+  reset() {
+    this.vertexOffset = 0;
+    this.indexOffset = 0;
+    this.quadCount = 0;
+  }
+
+  private ensureCapacity(requiredVertices: number, requiredIndices: number) {
+    if (requiredVertices > this._floatView.length) {
+      const newSize = Math.max(requiredVertices, this._floatView.length * 2);
+      const newBuffer = new ArrayBuffer(newSize * 4);
+      const newFloatView = new Float32Array(newBuffer);
+      newFloatView.set(this._floatView);
+      this._buffer = newBuffer;
+      this._floatView = newFloatView;
+      this._uintView = new Uint32Array(newBuffer);
+    }
+    if (requiredIndices > this._indices.length) {
+      const newSize = Math.max(requiredIndices, this._indices.length * 2);
+      const newIndices = new Uint16Array(newSize);
+      newIndices.set(this._indices);
+      this._indices = newIndices;
+    }
+  }
+
+  pushQuad(
     coords: number[],
     texCoords: number[],
     tintColor: number[],
@@ -174,26 +221,49 @@ class VertexBuffer {
     stackLayer: number,
     maskLayer: number,
   ) {
-    const b = this._buffer;
-    b[this.offset++] = coords[i * 2];
-    b[this.offset++] = coords[i * 2 + 1];
-    b[this.offset++] = texCoords[i * 2];
-    b[this.offset++] = texCoords[i * 2 + 1];
-    b[this.offset++] = tintColor[0];
-    b[this.offset++] = tintColor[1];
-    b[this.offset++] = tintColor[2];
-    b[this.offset++] = tintColor[3];
-    b[this.offset++] = viewport[0];
-    b[this.offset++] = viewport[1];
-    b[this.offset++] = viewport[2];
-    b[this.offset++] = viewport[3];
-    b[this.offset++] = textureSlot;
-    b[this.offset++] = stackLayer;
-    b[this.offset++] = maskLayer;
+    this.ensureCapacity(this.vertexOffset + 48, this.indexOffset + 6); // 48 = 12 * 4 vertices
+
+    const baseVertex = this.quadCount * 4;
+
+    // Pack color into uint32
+    const packedColor =
+      (Math.round(tintColor[0] * 255) << 24) |
+      (Math.round(tintColor[1] * 255) << 16) |
+      (Math.round(tintColor[2] * 255) << 8) |
+      Math.round(tintColor[3] * 255);
+
+    // Push 4 vertices for the quad (12 values per vertex instead of 15)
+    for (let i = 0; i < 4; i++) {
+      const base = this.vertexOffset;
+      this._floatView[base] = coords[i * 2];
+      this._floatView[base + 1] = coords[i * 2 + 1];
+      this._floatView[base + 2] = texCoords[i * 2];
+      this._floatView[base + 3] = texCoords[i * 2 + 1];
+      this._uintView[base + 4] = packedColor; // Store as uint32
+      this._floatView[base + 5] = viewport[0];
+      this._floatView[base + 6] = viewport[1];
+      this._floatView[base + 7] = viewport[2];
+      this._floatView[base + 8] = viewport[3];
+      this._floatView[base + 9] = textureSlot;
+      this._floatView[base + 10] = stackLayer;
+      this._floatView[base + 11] = maskLayer;
+      this.vertexOffset += VertexBuffer.VERTEX_SIZE;
+    }
+
+    // Push indices for two triangles (0,1,2) and (0,2,3)
+    const idx = this._indices;
+    idx[this.indexOffset++] = baseVertex + 0;
+    idx[this.indexOffset++] = baseVertex + 1;
+    idx[this.indexOffset++] = baseVertex + 2;
+    idx[this.indexOffset++] = baseVertex + 0;
+    idx[this.indexOffset++] = baseVertex + 2;
+    idx[this.indexOffset++] = baseVertex + 3;
+
+    this.quadCount++;
   }
 }
 
-export class WebGL1Backend {
+export class WebGL1Backend implements RenderBackend {
   private readonly gl: WebGL2RenderingContext;
   private readonly ext: {
     textureBptc: EXT_texture_compression_bptc | null;
@@ -217,6 +287,10 @@ export class WebGL1Backend {
   private vertices: VertexBuffer = new VertexBuffer();
   private drawCount = 0;
   private readonly vbo: WebGLBuffer;
+  private readonly ebo: WebGLBuffer;
+  private readonly vao: WebGLVertexArrayObject;
+  private vboSize = 0;
+  private eboSize = 0;
   private readonly maxTextures: number;
   private batchTextures: Map<
     string,
@@ -299,6 +373,36 @@ export class WebGL1Backend {
     if (!vbo) throw new Error("Failed to create vertex buffer");
     this.vbo = vbo;
 
+    const ebo = gl.createBuffer();
+    if (!ebo) throw new Error("Failed to create element buffer");
+    this.ebo = ebo;
+
+    // Create and setup VAO
+    const vao = gl.createVertexArray();
+    if (!vao) throw new Error("Failed to create vertex array object");
+    this.vao = vao;
+
+    // Bind VAO and setup vertex attributes once
+    gl.bindVertexArray(vao);
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.vbo);
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.ebo);
+
+    this.textureProgram.use(p => {
+      const stride = 48; // 12 * 4 bytes
+      gl.enableVertexAttribArray(p.position);
+      gl.vertexAttribPointer(p.position, 2, gl.FLOAT, false, stride, 0);
+      gl.enableVertexAttribArray(p.texCoord);
+      gl.vertexAttribPointer(p.texCoord, 2, gl.FLOAT, false, stride, 8);
+      gl.enableVertexAttribArray(p.tintColor);
+      gl.vertexAttribIPointer(p.tintColor, 1, gl.UNSIGNED_INT, stride, 16);
+      gl.enableVertexAttribArray(p.viewport);
+      gl.vertexAttribPointer(p.viewport, 4, gl.FLOAT, false, stride, 20);
+      gl.enableVertexAttribArray(p.texId);
+      gl.vertexAttribPointer(p.texId, 3, gl.FLOAT, false, stride, 36);
+    });
+
+    gl.bindVertexArray(null);
+
     // Set up the viewport
     this.setViewport(0, 0, canvas.width, canvas.height);
   }
@@ -313,6 +417,10 @@ export class WebGL1Backend {
 
   setViewport(x: number, y: number, width: number, height: number) {
     this.viewport = [x, y, width, height];
+  }
+
+  beginFrame() {
+    // WebGL doesn't need frame-level clearing management
   }
 
   begin() {
@@ -371,19 +479,42 @@ export class WebGL1Backend {
       );
     }
 
-    for (const i of [0, 1, 2, 0, 2, 3]) {
-      this.vertices.push(i, coords, texCoords, tintColor, this.viewport, t.index, stackLayer, maskLayer);
-    }
+    this.vertices.pushQuad(coords, texCoords, tintColor, this.viewport, t.index, stackLayer, maskLayer);
   }
 
   private dispatch() {
-    if (this.vertices.length === 0) return;
+    if (this.vertices.indexCount === 0) return;
 
     this.dispatchCount++;
 
     const gl = this.gl;
+
+    // Bind VAO - all vertex attributes are already configured
+    gl.bindVertexArray(this.vao);
+
+    // Update vertex buffer
     gl.bindBuffer(gl.ARRAY_BUFFER, this.vbo);
-    gl.bufferData(gl.ARRAY_BUFFER, this.vertices.buffer, gl.STREAM_DRAW);
+    const bufferData = this.vertices.buffer;
+    const requiredSize = bufferData.byteLength;
+
+    if (requiredSize > this.vboSize) {
+      gl.bufferData(gl.ARRAY_BUFFER, bufferData, gl.STREAM_DRAW);
+      this.vboSize = requiredSize;
+    } else {
+      gl.bufferSubData(gl.ARRAY_BUFFER, 0, bufferData);
+    }
+
+    // Update index buffer
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.ebo);
+    const indexData = this.vertices.indices;
+    const indexSize = indexData.byteLength;
+
+    if (indexSize > this.eboSize) {
+      gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indexData, gl.STREAM_DRAW);
+      this.eboSize = indexSize;
+    } else {
+      gl.bufferSubData(gl.ELEMENT_ARRAY_BUFFER, 0, indexData);
+    }
     this.textureProgram.use(p => {
       // Set up the viewport
       this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
@@ -402,33 +533,18 @@ export class WebGL1Backend {
       }
       gl.activeTexture(gl.TEXTURE0);
 
-      // Draw
-
-      // TODO: Use bufferSubData
-      // gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.vertices.buffer);
-      gl.vertexAttribPointer(p.position, 2, gl.FLOAT, false, 60, 0);
-      gl.vertexAttribPointer(p.texCoord, 2, gl.FLOAT, false, 60, 8);
-      gl.vertexAttribPointer(p.tintColor, 4, gl.FLOAT, false, 60, 16);
-      gl.vertexAttribPointer(p.viewport, 4, gl.FLOAT, false, 60, 32);
-      gl.vertexAttribPointer(p.texId, 3, gl.FLOAT, false, 60, 48);
-      gl.enableVertexAttribArray(p.position);
-      gl.enableVertexAttribArray(p.texCoord);
-      gl.enableVertexAttribArray(p.tintColor);
-      gl.enableVertexAttribArray(p.viewport);
-      gl.enableVertexAttribArray(p.texId);
-      gl.drawArrays(gl.TRIANGLES, 0, this.vertices.length);
-      // gl.disableVertexAttribArray(p.position);
-      // gl.disableVertexAttribArray(p.texCoord);
-      // gl.disableVertexAttribArray(p.tintColor);
-      // gl.disableVertexAttribArray(p.viewport);
-      // gl.disableVertexAttribArray(p.texId);
-      // gl.bindBuffer(gl.ARRAY_BUFFER, null);
+      // Draw - VAO already has all vertex attributes configured
+      gl.drawElements(gl.TRIANGLES, this.vertices.indexCount, gl.UNSIGNED_SHORT, 0);
     });
+
+    // Unbind VAO
+    gl.bindVertexArray(null);
+
     this.resetBatch();
   }
 
   private resetBatch() {
-    this.vertices = new VertexBuffer();
+    this.vertices.reset();
     this.batchTextures = new Map();
     this.batchTextureCount = 0;
   }

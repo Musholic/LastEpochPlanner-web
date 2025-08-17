@@ -1,0 +1,44 @@
+amends "package://github.com/jdx/hk/releases/download/v1.2.0/hk@1.2.0#/Config.pkl"
+import "package://github.com/jdx/hk/releases/download/v1.2.0/hk@1.2.0#/Builtins.pkl"
+
+local linters = new Mapping<String, Step> {
+
+    ["biome"] {
+        glob = List("*.js", "*.jsx", "*.ts", "*.tsx", "*.json")
+        stage = glob
+        check = "biome check {{ files }}"
+        fix = "biome check --write {{ files }}"
+        prefix = "npx"
+    }
+    ["tsc"] = (Builtins.tsc) {
+        prefix = "npx"
+    }
+
+    ["pkl"] {
+        glob = "*.pkl"
+        check = "pkl eval {{files}} >/dev/null"
+        prefix = "mise exec -- "
+    }
+
+    ["actionlint"] = (Builtins.actionlint) {
+        prefix = "mise exec -- "
+    }
+}
+
+hooks {
+    ["pre-commit"] {
+        fix = true
+        stash = "patch-file"
+        steps {
+            ...linters
+        }
+    }
+    ["fix"] {
+        fix = true
+        stash = "patch-file"
+        steps = linters
+    }
+    ["check"] {
+        steps = linters
+    }
+}

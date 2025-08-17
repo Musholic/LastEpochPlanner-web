@@ -12,6 +12,7 @@ import dayjs from "dayjs";
 import localeData from "dayjs/plugin/localeData";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import utc from "dayjs/plugin/utc";
+import { gameData } from "pob-game/src";
 import React from "react";
 import { Link, redirect } from "react-router";
 import type { Route } from "../routes/+types/_index";
@@ -31,17 +32,11 @@ export async function clientLoader(args: Route.ClientLoaderArgs) {
   return (await rep.json()) as Games;
 }
 
-const games = {
-  le: {
-    name: "Last Epoch",
-  },
-};
-
 export default function Index({ loaderData }: Route.ComponentProps) {
   function versionTable(game: keyof Games) {
     return (
       <div className="card bg-base-100 shadow-md p-4 w-full">
-        <h3 className="text-2xl font-semibold mb-4">{games[game].name} Versions</h3>
+        <h3 className="text-2xl font-semibold mb-4">{gameData[game].name}</h3>
         <div className="overflow-auto max-h-96">
           <table className="table w-full">
             <thead>
@@ -73,7 +68,7 @@ export default function Index({ loaderData }: Route.ComponentProps) {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
-      <section className="hero min-h-160" style={{ backgroundImage: "url('/hero-bg.webp')" }}>
+      <section className="hero min-h-160" style={{ backgroundImage: "url('/hero-bg.webp')" }} data-theme="dark">
         <div className="hero-overlay backdrop-blur-xs" />
         <div className="hero-content text-center flex flex-col items-center z-10">
           <div>

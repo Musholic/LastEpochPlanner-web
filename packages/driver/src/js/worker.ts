@@ -5,16 +5,19 @@ import * as zenfs from "@zenfs/core";
 import { fs, Fetch } from "@zenfs/core";
 import { WebAccess } from "@zenfs/dom";
 import * as Comlink from "comlink";
-import type { UIState } from "./event";
 import { ImageRepository } from "./image";
+import type { KeyboardUIState } from "./keyboard-handler";
 import { log, tag } from "./logger";
+import type { MouseState } from "./mouse-handler";
 // @ts-ignore
 import {
   BinPackingTextRasterizer,
+  type RenderStats,
   Renderer,
   TextMetrics,
   type TextRasterizer,
   WebGL1Backend,
+  WebGPUBackend,
   loadFonts,
 } from "./renderer";
 import type { SubScriptWorker } from "./sub";
@@ -82,8 +85,8 @@ type OnFetchFunction = (
 }>;
 
 export type HostCallbacks = {
-  onError: (message: string) => void;
-  onFrame: (at: number, time: number) => void;
+  onError: (error: unknown) => void;
+  onFrame: (at: number, time: number, stats?: RenderStats) => void;
   onFetch: OnFetchFunction;
   onTitleChange: (title: string) => void;
 };
@@ -117,11 +120,8 @@ export class DriverWorker {
     height: 600,
     pixelRatio: 1,
   };
-  private uiState: UIState = {
-    x: 0,
-    y: 0,
-    keys: new Set(),
-  };
+  private mouseState: MouseState = { x: 0, y: 0 };
+  private keyboardState: KeyboardUIState = { keys: new Set() };
   private hostCallbacks: HostCallbacks | undefined;
   private mainCallbacks: MainCallbacks | undefined;
   private imports: Imports | undefined;
@@ -190,8 +190,6 @@ export class DriverWorker {
       },
     });
 
-    await printFileSystemTree("/lib");
-
     Object.assign(module, this.exports(module));
     this.imports = this.resolveImports(module);
 
@@ -203,10 +201,28 @@ export class DriverWorker {
 
   destroy() {}
 
-  setCanvas(canvas: OffscreenCanvas) {
-    const backend = new WebGL1Backend(canvas);
-    if (this.renderer) {
-      this.renderer.backend = backend;
+  async setCanvas(canvas: OffscreenCanvas, useWebGPU: boolean) {
+    try {
+      if (useWebGPU && "gpu" in navigator) {
+        const backend = new WebGPUBackend(canvas);
+        await backend.waitForInit();
+        if (this.renderer) {
+          this.renderer.backend = backend;
+        }
+        log.info(tag.backend, "Using WebGPU backend");
+      } else {
+        const backend = new WebGL1Backend(canvas);
+        if (this.renderer) {
+          this.renderer.backend = backend;
+        }
+        log.info(tag.backend, "Using WebGL2 backend");
+      }
+    } catch (error) {
+      log.warn(tag.backend, "Failed to initialize WebGPU, falling back to WebGL2", error);
+      const backend = new WebGL1Backend(canvas);
+      if (this.renderer) {
+        this.renderer.backend = backend;
+      }
     }
   }
 
@@ -220,25 +236,30 @@ export class DriverWorker {
     this.dirtyCount = 2;
   }
 
-  handleMouseMove(uiState: UIState) {
-    this.uiState = uiState;
+  updateMouseState(mouseState: MouseState) {
+    this.mouseState = mouseState;
+  }
+
+  updateKeyboardState(keyboardState: KeyboardUIState) {
+    this.keyboardState = keyboardState;
+  }
+
+  handleMouseMove(mouseState: MouseState) {
+    this.mouseState = mouseState;
     this.invalidate();
   }
 
-  handleKeyDown(name: string, doubleClick: number, uiState: UIState) {
-    this.uiState = uiState;
+  handleKeyDown(name: string, doubleClick: number) {
     this.imports?.onKeyDown(name, doubleClick);
     this.invalidate();
   }
 
-  handleKeyUp(name: string, doubleClick: number, uiState: UIState) {
-    this.uiState = uiState;
+  handleKeyUp(name: string, doubleClick: number) {
     this.imports?.onKeyUp(name, doubleClick);
     this.invalidate();
   }
 
-  handleChar(char: string, doubleClick: number, uiState: UIState) {
-    this.uiState = uiState;
+  handleChar(char: string, doubleClick: number) {
     this.imports?.onChar(char, doubleClick);
     this.invalidate();
   }
@@ -251,20 +272,31 @@ export class DriverWorker {
     await this.imports?.loadBuildFromCode(code);
   }
 
+  setLayerVisible(layer: number, sublayer: number, visible: boolean) {
+    this.renderer?.setLayerVisible(layer, sublayer, visible);
+    this.invalidate();
+  }
+
   private async tick() {
     if (this.visible) {
-      const start = performance.now();
+      try {
+        const start = performance.now();
 
-      await this.imports?.onFrame();
+        await this.imports?.onFrame();
 
-      const time = performance.now() - start;
-      this.hostCallbacks?.onFrame(start, time);
-      this.dirtyCount -= 1;
+        const time = performance.now() - start;
+        const stats = this.renderer?.getStats();
+        this.hostCallbacks?.onFrame(start, time, stats);
+        this.dirtyCount -= 1;
+      } catch (error) {
+        log.error(tag.worker, "Error during frame processing", error);
+        this.hostCallbacks?.onError(error);
+        throw error;
+      }
     }
     requestAnimationFrame(this.tick.bind(this));
   }
 
-  // js -> wasm
   private resolveImports(module: DriverModule): Imports {
     return {
       init: module.cwrap("init", "number", [], { async: true }),
@@ -280,17 +312,16 @@ export class DriverWorker {
     };
   }
 
-  // wasm -> js
   private exports(module: DriverModule) {
     return {
       fs: zenfs.fs,
-      onError: (message: string) => this.hostCallbacks?.onError(message),
+      onError: (message: string) => this.hostCallbacks?.onError(new Error(`Error in lua: ${message}`)),
       setWindowTitle: (title: string) => this.hostCallbacks?.onTitleChange(title),
       getScreenWidth: () => this.screenSize.width,
       getScreenHeight: () => this.screenSize.height,
-      getCursorPosX: () => this.uiState.x,
-      getCursorPosY: () => this.uiState.y,
-      isKeyDown: (name: string) => this.uiState.keys.has(name),
+      getCursorPosX: () => this.mouseState.x,
+      getCursorPosY: () => this.mouseState.y,
+      isKeyDown: (name: string) => this.keyboardState.keys.has(name),
       imageLoad: (handle: number, filename: string, flags: number) => {
         this.imageRepo?.load(handle, filename, flags).then(() => {
           this.invalidate();
@@ -361,7 +392,7 @@ async function printFileSystemTree(path: string) {
     for (const entry of entries) {
       const entryPath = `${currentPath}/${entry.name}`;
       if (entry.isDirectory()) {
-        tree += `${indent}📁 ${entry.name}\n` + (await buildTree(entryPath, depth + 1));
+        tree += `${indent}📁 ${entry.name}\n${await buildTree(entryPath, depth + 1)}`;
       } else {
         tree += `${indent}📄 ${entry.name}\n`;
       }

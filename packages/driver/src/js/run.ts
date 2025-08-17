@@ -1,12 +1,13 @@
+import { type Game, gameData } from "pob-game/src";
 import { Driver } from "./driver";
 
 (async () => {
-  const version = `1/${__RUN_VERSION__}/r2`;
-  const versionPrefix = `${__ASSET_PREFIX__}/${version}`;
+  const versionPrefix = `${__ASSET_PREFIX__}/games/${__RUN_GAME__}/versions/${__RUN_VERSION__}`;
+  console.log("Loading driver with assets:", versionPrefix);
 
   const driver = new Driver(__RUN_BUILD__, versionPrefix, {
-    onError: message => console.error(message),
-    onFrame: (_render, _time) => {},
+    onError: error => console.error(error),
+    onFrame: (_at, _time, _stats) => {},
     onFetch: async (_url, _headers, _body) => {
       throw new Error("Fetch not implemented in shell");
     },

@@ -1,5 +1,137 @@
 # Changelog
 
+## [0.27.0](https://github.com/atty303/pob-web/compare/v0.26.0...v0.27.0) (2025-08-16)
+
+
+### Features
+
+* **ErrorDialog:** implement error handling UI for critical errors ([f64acb5](https://github.com/atty303/pob-web/commit/f64acb5bfc14772044db4cafeee933136ad5d529))
+* **sentry:** add console logging integration and enable logs ([3b6b4c6](https://github.com/atty303/pob-web/commit/3b6b4c69deae7b546bdaa42113a205fd898d9a08))
+
+
+### Bug Fixes
+
+* added error dialog ([#125](https://github.com/atty303/pob-web/issues/125)) ([b167b95](https://github.com/atty303/pob-web/commit/b167b95b6f72972e4e43c6170e581d929c3c99ac))
+* **PoBWindow:** update error handling to set error state instead of throwing ([f4b560d](https://github.com/atty303/pob-web/commit/f4b560d04aad0b74e7e15be8c0200628b29ef70d))
+* **worker:** add error handling during frame processing in tick method ([246ca8a](https://github.com/atty303/pob-web/commit/246ca8a3cfc08626f4bea92b42260592575000b1))
+
+## [0.26.0](https://github.com/atty303/pob-web/compare/v0.25.0...v0.26.0) (2025-08-16)
+
+
+### Features
+
+* add zoom control popup with TailwindCSS styling ([ee71bb4](https://github.com/atty303/pob-web/commit/ee71bb44dd09d03e634468bd01fcb0fa475b107b))
+* **driver:** add arrow keys to virtual keyboard ([abce212](https://github.com/atty303/pob-web/commit/abce212a7c63ea2180d8a7239c032f5126ae9140))
+* **driver:** add auto/fixed size toggle for canvas controls ([eb210bd](https://github.com/atty303/pob-web/commit/eb210bdf5bda37296a9cb4e066f41db11d2db000))
+* **driver:** add flexible spacing for external toolbar components ([8612139](https://github.com/atty303/pob-web/commit/8612139e255eb23ccdf701842563a085bd953cf1))
+* **driver:** add mobile touch support with responsive toolbar ([f43dcef](https://github.com/atty303/pob-web/commit/f43dcef55124cd16433b33968bba10f10bcea1ee))
+* **driver:** add symbol mode to virtual keyboard ([c24e5e6](https://github.com/atty303/pob-web/commit/c24e5e6e08d384eabb0c2381131c3428a3447fcf))
+* **driver:** implement minimum canvas size with auto-pan and fix coordinate transforms ([b6bd31a](https://github.com/atty303/pob-web/commit/b6bd31a5212c06012777080866db96c4c5a74396))
+* mobile support ([#122](https://github.com/atty303/pob-web/issues/122)) ([90ed6af](https://github.com/atty303/pob-web/commit/90ed6af7aed8c75d165fb7d2084bfea9530f8e44))
+* **overlay:** improve virtual keyboard positioning and zoom reset behavior ([de7eae4](https://github.com/atty303/pob-web/commit/de7eae482cefb645e6ec24185900c1077457a7f0))
+* **touch:** add three-finger pan gesture for universal canvas navigation ([dbb5936](https://github.com/atty303/pob-web/commit/dbb5936c900ff8c8d05521db0e3db479dfe49a99))
+* **web:** add comprehensive help system with mobile controls guide ([256037c](https://github.com/atty303/pob-web/commit/256037cb6e7a3fdf1e1f659ec7ab06b36a35321a))
+
+
+### Bug Fixes
+
+* **biome:** update fix command to use --write option for file modifications ([7fb699b](https://github.com/atty303/pob-web/commit/7fb699be518b115e713d6c2720e08d1d5f6d07f9))
+* **canvas:** implement smart initial zoom for mobile screens ([04a5684](https://github.com/atty303/pob-web/commit/04a56848abb0abcfc4378231b21b779cbf698549))
+* **driver:** add Delete key to virtual keyboard layout ([3cfbd3c](https://github.com/atty303/pob-web/commit/3cfbd3c8ad5e332258d484cc6c8bab04450616af))
+* **driver:** add virtual keyboard and fix overlay layout issues ([a8eb252](https://github.com/atty303/pob-web/commit/a8eb252f49e8663cc641190e6963ccc996b437b5))
+* **driver:** adjust baseline positioning for improved keyboard centering ([b568f87](https://github.com/atty303/pob-web/commit/b568f8757bef72c32e28bbe5c48d3c325c36e9b4))
+* **driver:** apply pw: prefix to all TailwindCSS classes in overlay components ([5518d1f](https://github.com/atty303/pob-web/commit/5518d1f328181b0c19e3481ddc57ba8374b98c55))
+* **driver:** constrain virtual keyboard position within viewport on resize ([410ea3c](https://github.com/atty303/pob-web/commit/410ea3cb4e80dbcfa0abe747070db9b4dbbbc4dc))
+* **driver:** correct virtual keyboard special key handling ([afc98ee](https://github.com/atty303/pob-web/commit/afc98eef7c4efeab059a303e3d90c5a5bc122956))
+* **driver:** fix mouse pan functionality by correcting TouchTransformManager updates ([f6e349e](https://github.com/atty303/pob-web/commit/f6e349ee95f58995ebb61f16692019966123558b))
+* **driver:** fix transform translateY drift on canvas container resize ([4458784](https://github.com/atty303/pob-web/commit/44587840db0d8aee1b54b923b7ea03df5f0eb292))
+* **driver:** implement proper Shift key simulation for virtual keyboard ([fb7066a](https://github.com/atty303/pob-web/commit/fb7066ae50ec82ed65fe8f16e57430b0d89feedd))
+* **driver:** improve canvas resize handling for reliable PoB rendering ([d0ae5c7](https://github.com/atty303/pob-web/commit/d0ae5c78fb8e48325dfb5723a45cc03d3394ea1b))
+* **driver:** improve mouse state tracking for all events ([162cc51](https://github.com/atty303/pob-web/commit/162cc5122fc9f9252be64c6986bb6d7be6b8d4f6))
+* **driver:** prevent mouse movement during 2-finger zoom gestures ([7882f79](https://github.com/atty303/pob-web/commit/7882f79febf9c8309412a38827c7b3fea0818ece))
+* **driver:** prevent overlay events from propagating to PoB canvas ([9089960](https://github.com/atty303/pob-web/commit/9089960036bbde39e5af384d2fe80ad68387fc46))
+* **driver:** prevent zoom interference during 3-finger pan gestures ([fae1427](https://github.com/atty303/pob-web/commit/fae142762f4d31649c15198eb7d891d3195c4176))
+* **driver:** recalculate initial scale on orientation change ([1f8d715](https://github.com/atty303/pob-web/commit/1f8d71593518c9bfe3876f2b65e1d8f94be03f4e))
+* **driver:** reduce long press timeout for right-click to 300ms ([bef6776](https://github.com/atty303/pob-web/commit/bef6776f6d7c47a817ccee3802182881327ad7d4))
+* **driver:** refactor drag mode to pan tool with improved touch interaction ([b763cb6](https://github.com/atty303/pob-web/commit/b763cb64c1808fbb1a62c61b085193b76a4e0005))
+* **driver:** refactor keyboard management to use unified KeyboardState ([4b8ff88](https://github.com/atty303/pob-web/commit/4b8ff883893ee2eead1d6a05a16ffc24d09a663f))
+* **driver:** remove automatic pan mode based on canvas size ([7510443](https://github.com/atty303/pob-web/commit/75104430c17e128eac9eaeb6138974926e1cb4f7))
+* **driver:** remove unnecessary hold mode functionality from virtual keyboard ([fc3fca8](https://github.com/atty303/pob-web/commit/fc3fca8b3b2aead2499c99fdde1555268e9f570f))
+* **driver:** reorder toolbar buttons for better UX ([c050c2a](https://github.com/atty303/pob-web/commit/c050c2a0d93f470f58043c5753e5b1d427ebf731))
+* **driver:** replace CSS layers with O- prefix for broader browser support ([445788f](https://github.com/atty303/pob-web/commit/445788f530159df6e27b982335ff0018e85ba826))
+* **driver:** resolve coordinate transformation issues with CSS transforms ([bd075a5](https://github.com/atty303/pob-web/commit/bd075a58a35ea92f83f6777bd077a42842f15ae0))
+* **driver:** resolve iOS Safari viewport and safe area issues ([1b39960](https://github.com/atty303/pob-web/commit/1b39960f1760363b0275797d448b13f95eaed768))
+* **driver:** resolve linter errors in fullscreen implementation ([f0cf183](https://github.com/atty303/pob-web/commit/f0cf183f0a48cb576fecd143b9ffe6d767a25196))
+* **driver:** resolve mobile fullscreen API compatibility issues ([a892569](https://github.com/atty303/pob-web/commit/a8925698609a6418d153e38a6d990cbdecd660a7))
+* **driver:** resolve tablet rotation layout issues with centralized management ([823c527](https://github.com/atty303/pob-web/commit/823c527faae548824f81baeac8e4f5145c88ff69))
+* **driver:** simplify DOM structure to use only canvas container and overlay ([1b6377b](https://github.com/atty303/pob-web/commit/1b6377b3f4a6bc6c3727157ddbf840626061cd17))
+* **driver:** update DaisyUI classes to use pw: prefix for proper scoping ([29b4359](https://github.com/atty303/pob-web/commit/29b435950520fb851525c9dc442897812ceed552))
+* **driver:** update toolbar to iOS HIG standard 44pt touch targets ([3939ef4](https://github.com/atty303/pob-web/commit/3939ef40fd501aadb29493c3b3ecd253cf0ad6fe))
+* **hooks:** update stash method to use 'patch-file' for pre-commit and fix hooks ([542a60b](https://github.com/atty303/pob-web/commit/542a60b3f9e504eb38320c549d604bf27d652fec))
+* **keyboard:** refine keypress handling for single character keys ([b549cee](https://github.com/atty303/pob-web/commit/b549cee4c861b6f5351a4dbaf62c1f2dcc29b18b))
+* **mobile:** reduce two-finger scroll sensitivity and add PWA manifest ([36ac4c5](https://github.com/atty303/pob-web/commit/36ac4c5266657f3744b914d66c43809f067872f8))
+* **mobile:** resolve iOS Safari toolbar overlap issues ([23e6617](https://github.com/atty303/pob-web/commit/23e661725cddfa42e060086165aaf48f26e0d11f))
+* **overlay:** prevent virtual keyboard position reset on toggle ([fcf291a](https://github.com/atty303/pob-web/commit/fcf291ad147d04b5e70e6cd0f421e50fdba550a9))
+* **touch:** improve gesture handling for consistent zoom and pan behavior ([d87f407](https://github.com/atty303/pob-web/commit/d87f40791fc1ac736fb357192fc6a0ec390e9910))
+* **ui:** adjust padding for virtual keyboard and add dark theme to hero section ([6c8702e](https://github.com/atty303/pob-web/commit/6c8702edc46a9a23dd280e308a2fc8a7ba5a6a63))
+* **web:** prevent multiple driver start executions in PoBWindow ([8f51e27](https://github.com/atty303/pob-web/commit/8f51e277d08dda9c4dfea101eb7b3985646a0e41))
+* **web:** remove tutorial setting from settings dialog ([63bc382](https://github.com/atty303/pob-web/commit/63bc382eba29375f4e84d245b5e1158135bbabee))
+
+## [0.25.0](https://github.com/atty303/pob-web/compare/v0.24.0...v0.25.0) (2025-08-14)
+
+
+### Features
+
+* Add comprehensive render statistics tracking and display ([8676af6](https://github.com/atty303/pob-web/commit/8676af628e4b138fcb2a7b7e89b05bc466d6706d))
+* Add layer visibility toggle functionality ([50d4da3](https://github.com/atty303/pob-web/commit/50d4da3f7f3219df212045e31a431446b7edff0c))
+
+
+### Performance Improvements
+
+* **driver:** add VAO support for improved vertex attribute management ([aa18e6b](https://github.com/atty303/pob-web/commit/aa18e6b635d316a9d2b2a4de1ce86d0caeaa23ea))
+* **driver:** compress vertex color data to reduce memory usage ([e3def1a](https://github.com/atty303/pob-web/commit/e3def1a0db036d526c1311389957cf112cc05386))
+* **driver:** implement index buffer for WebGL backend ([2338314](https://github.com/atty303/pob-web/commit/23383147250fd59eb310275288001b7b5d3cecfd))
+* **driver:** merge consecutive commands into ranges for efficient processing ([81a3850](https://github.com/atty303/pob-web/commit/81a3850cb657e9860b69674ad317b5f9f6bb27d7))
+* **driver:** optimize command sorting to minimize allocations and copies ([c23b038](https://github.com/atty303/pob-web/commit/c23b0382e1b541457de65f9bab348e339b91524c))
+
+## [0.24.0](https://github.com/atty303/pob-web/compare/v0.23.0...v0.24.0) (2025-08-14)
+
+
+### Features
+
+* add WebGPU rendering backend ([13746aa](https://github.com/atty303/pob-web/commit/13746aa0da2aee1ae695524155066bd5122a43b2))
+* **driver:** Add WebGPU rendering backend ([#117](https://github.com/atty303/pob-web/issues/117)) ([b85b6af](https://github.com/atty303/pob-web/commit/b85b6af8c8c1e4264a00fb3d241414e5fa7af200))
+
+
+### Bug Fixes
+
+* **driver:** enable WebGPU by default in attachToDOM and setCanvas ([e424a78](https://github.com/atty303/pob-web/commit/e424a787a4ed7f256bf61768e7f426d730c42044))
+* **driver:** fix WebGPU image texture upload ([e95d05f](https://github.com/atty303/pob-web/commit/e95d05f8fbb2691e60d013f689ff55687798fdbe))
+* **driver:** fix WebGPU layer compositing by managing frame-level clearing ([70a99a5](https://github.com/atty303/pob-web/commit/70a99a540dd0eeed9c366c46c638cb54f8f28f7c))
+* **driver:** fix WebGPU shader uniform control flow error ([c3a5ab4](https://github.com/atty303/pob-web/commit/c3a5ab4f921ada88ce6930c791eacfb13a7e1377))
+* **driver:** fix WebGPU texture binding order ([71dada4](https://github.com/atty303/pob-web/commit/71dada46c9a567fe4931b44369ba941e913fd11f))
+* **driver:** fix WebGPU texture rendering issues ([6b49f09](https://github.com/atty303/pob-web/commit/6b49f09b5de53578142edc7f1c712cb061353eef))
+
+
+### Performance Improvements
+
+* **driver:** enhance data structure alignment and command handling in draw module ([60ecb3c](https://github.com/atty303/pob-web/commit/60ecb3ce719ffb5d424c660a6fe952922960aa6f))
+* **driver:** improve build configurations for Debug and Release modes ([f620be4](https://github.com/atty303/pob-web/commit/f620be454b0dd873878a9ad7a1ce5205d4e1d7ab))
+* **driver:** optimize VertexBuffer allocation in WebGL/WebGPU backends ([1335242](https://github.com/atty303/pob-web/commit/133524258a0c86a29a1db8713300ecf08866cfbf))
+* optimizations ([#119](https://github.com/atty303/pob-web/issues/119)) ([eef7429](https://github.com/atty303/pob-web/commit/eef7429ec354a442a7846bf4f49f8d118d71cb10))
+
+## [0.23.0](https://github.com/atty303/pob-web/compare/v0.22.2...v0.23.0) (2025-08-12)
+
+
+### Bug Fixes
+
+* **devcontainer:** update mise feature configuration to include install option ([d630aa6](https://github.com/atty303/pob-web/commit/d630aa64deb6f657fa347a3c9a13a033aa2b565b))
+
+
+### Miscellaneous Chores
+
+* release 0.23.0 ([05a3863](https://github.com/atty303/pob-web/commit/05a3863eaefcc16921d6e079f438b233bb1bb97d))
+
 ## [0.22.2](https://github.com/atty303/pob-web/compare/v0.22.1...v0.22.2) (2025-04-28)
 
 

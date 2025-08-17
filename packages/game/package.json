@@ -1,0 +1,10 @@
+{
+  "name": "pob-game",
+  "private": true,
+  "version": "",
+  "type": "module",
+  "dependencies": {},
+  "scripts": {
+    "build": "true"
+  }
+}

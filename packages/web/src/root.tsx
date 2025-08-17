@@ -11,7 +11,12 @@ import type { Route } from "./+types/root";
 if (import.meta.env.VITE_SENTRY_DSN) {
   Sentry.init({
     dsn: import.meta.env.VITE_SENTRY_DSN,
-    integrations: [Sentry.browserTracingIntegration(), Sentry.replayIntegration()],
+    integrations: [
+      Sentry.browserTracingIntegration(),
+      Sentry.replayIntegration(),
+      Sentry.consoleLoggingIntegration({ levels: ["log", "warn", "error"] }),
+    ],
+    enableLogs: true,
     // Performance Monitoring
     tracesSampleRate: 1.0, //  Capture 100% of the transactions
     // Set 'tracePropagationTargets' to control for which URLs distributed tracing should be enabled
@@ -40,7 +45,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
     <html lang="en" className="h-full">
       <head>
         <meta charSet="UTF-8" />
-        <meta name="viewport" content="width=1280, initial-scale=1.0" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="pob.cool" />
+        <meta name="theme-color" content="#1a1a1a" />
+        <link rel="manifest" href="/manifest.json" />
         <title>Last Epoch Planner Web</title>
         <meta property="og:title" content="Last Epoch Planner Web" />
         <meta property="og:description" content="A web version of Last Epoch Planner" />
