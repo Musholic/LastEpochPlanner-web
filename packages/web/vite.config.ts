@@ -44,7 +44,7 @@ export default defineConfig(({ mode }) => ({
     __ASSET_PREFIX__: JSON.stringify(
       mode === "development" && process.env.POB_COOL_ASSET === undefined
         ? `/@fs/${packerR2Dir}`
-        : "/",
+        : "",
     ),
   },
   worker: {

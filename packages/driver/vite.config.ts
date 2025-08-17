@@ -20,7 +20,7 @@ export default defineConfig(({ mode }) => ({
     __ASSET_PREFIX__: JSON.stringify(
       mode === "development" && process.env.POB_COOL_ASSET === undefined
         ? `/@fs/${packerR2Dir}`
-        : "/",
+        : "",
     ),
     __RUN_GAME__: JSON.stringify(process.env.RUN_GAME ?? "le"),
     __RUN_VERSION__: JSON.stringify(process.env.RUN_VERSION ?? "v0.5.1"),
