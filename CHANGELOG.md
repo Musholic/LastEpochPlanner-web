@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.27.2](https://github.com/atty303/pob-web/compare/v0.27.1...v0.27.2) (2025-09-06)
+
+
+### Bug Fixes
+
+* **driver:** optimize line width calculation using reduce to avoid stack overflow ([908c444](https://github.com/atty303/pob-web/commit/908c444c361b11baff76537b7879c49a9f846b2d))
+* **driver:** update keyboard handling to use new PoBKeyboardState and DOMKeyboardState ([c88051a](https://github.com/atty303/pob-web/commit/c88051ad032365be7466efc67f9e3bfa92ca0d53)), closes [#128](https://github.com/atty303/pob-web/issues/128)
+
+## [0.27.1](https://github.com/atty303/pob-web/compare/v0.27.0...v0.27.1) (2025-08-18)
+
+
+### Bug Fixes
+
+* **driver:** increase stack size ([a57cf01](https://github.com/atty303/pob-web/commit/a57cf011903bff45f4f4fd84876b4748bc2c67f3))
+
 ## [0.27.0](https://github.com/atty303/pob-web/compare/v0.26.0...v0.27.0) (2025-08-16)
 
 
