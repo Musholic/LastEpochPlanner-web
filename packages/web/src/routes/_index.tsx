@@ -13,10 +13,11 @@ import localeData from "dayjs/plugin/localeData";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import utc from "dayjs/plugin/utc";
 import { gameData } from "pob-game/src";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, redirect } from "react-router";
 import type { Route } from "../routes/+types/_index";
 import type { Games } from "./_game";
+import ReactMarkdown from "react-markdown";
 
 dayjs.extend(utc);
 dayjs.extend(localeData);
@@ -33,6 +34,21 @@ export async function clientLoader(args: Route.ClientLoaderArgs) {
 }
 
 export default function Index({ loaderData }: Route.ComponentProps) {
+  const [changelog, setChangelog] = useState<string>("");
+
+  useEffect(() => {
+    fetch("/CHANGELOG.md")
+      .then(response => response.text())
+      .then(content => {
+        // Remove the first line as we already have a title
+        const lines = content.split('\n');
+        const contentWithoutFirstLine = lines.slice(1).join('\n');
+        setChangelog(contentWithoutFirstLine);
+      })
+      .catch(error => console.error("Failed to fetch changelog:", error));
+  }, []);
+
+
   function versionTable(game: keyof Games) {
     return (
       <div className="card bg-base-100 shadow-md p-4 w-full">
@@ -140,6 +156,25 @@ export default function Index({ loaderData }: Route.ComponentProps) {
         </div>
       </section>
 
+      {/* Changelog Section */}
+      {changelog && (
+        <section className="py-10 px-4 bg-base-100">
+          <h2 className="text-3xl font-bold text-center mb-6">
+            <ArchiveBoxIcon className="size-8 mr-2 inline text-accent" />
+            Changelog
+          </h2>
+          <div className="max-w-4xl mx-auto">
+            <div className="card bg-base-200 shadow-md p-6">
+              <div className="prose max-w-none max-h-96 overflow-y-auto">
+                <ReactMarkdown>
+                  {changelog}
+                </ReactMarkdown>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+      
       {/* Pob.cool Section */}
       <section className="py-10 px-4 bg-base-100">
         <h2 className="text-3xl font-bold text-center mb-6">

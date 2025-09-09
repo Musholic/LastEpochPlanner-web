@@ -47,13 +47,18 @@ jobs:
         env:
           LATEST_TAG: ${{ steps.get_release.outputs.result }}
         run: npm run pack -w packages/packer $LATEST_TAG le clone
+        
+      - name: "Pack beta version"
+        run: npm run pack -w packages/packer beta le clone
 
       - name: "Assemble"
         env:
           LATEST_TAG: ${{ steps.get_release.outputs.result }}
         run: |
           cp -r packages/web/build/client dist
-          cp packages/packer/r2/games dist/ -r;
+          cp packages/packer/r2/games dist/ -r
+          # Copy the latest CHANGELOG.md
+          cp packages/packer/build/le/beta/repo/CHANGELOG.md dist/CHANGELOG.md
           cp version.json dist/
           # SPA trick
           cp dist/index.html dist/404.html
