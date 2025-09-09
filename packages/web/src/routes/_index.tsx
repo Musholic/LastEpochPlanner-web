@@ -14,10 +14,10 @@ import localizedFormat from "dayjs/plugin/localizedFormat";
 import utc from "dayjs/plugin/utc";
 import { gameData } from "pob-game/src";
 import React, { useEffect, useState } from "react";
+import ReactMarkdown from "react-markdown";
 import { Link, redirect } from "react-router";
 import type { Route } from "../routes/+types/_index";
 import type { Games } from "./_game";
-import ReactMarkdown from "react-markdown";
 
 dayjs.extend(utc);
 dayjs.extend(localeData);
@@ -41,45 +41,12 @@ export default function Index({ loaderData }: Route.ComponentProps) {
       .then(response => response.text())
       .then(content => {
         // Remove the first line as we already have a title
-        const lines = content.split('\n');
-        const contentWithoutFirstLine = lines.slice(1).join('\n');
+        const lines = content.split("\n");
+        const contentWithoutFirstLine = lines.slice(1).join("\n");
         setChangelog(contentWithoutFirstLine);
       })
       .catch(error => console.error("Failed to fetch changelog:", error));
   }, []);
-
-
-  function versionTable(game: keyof Games) {
-    return (
-      <div className="card bg-base-100 shadow-md p-4 w-full">
-        <h3 className="text-2xl font-semibold mb-4">{gameData[game].name}</h3>
-        <div className="overflow-auto max-h-96">
-          <table className="table w-full">
-            <thead>
-              <tr>
-                <th>Version</th>
-                <th>Release Date</th>
-                <th />
-              </tr>
-            </thead>
-            <tbody>
-              {loaderData[game].versions.map(_ => (
-                <tr key={_.value}>
-                  <td>{_.value}</td>
-                  <td>{dayjs.utc(_.date).local().format("ll")}</td>
-                  <td>
-                    <Link to={`/${game}/versions/${_.value}`} className="btn btn-primary btn-xs">
-                      <ArrowRightIcon className="size-4" />
-                    </Link>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -89,9 +56,7 @@ export default function Index({ loaderData }: Route.ComponentProps) {
         <div className="hero-content text-center flex flex-col items-center z-10">
           <div>
             <h1 className="text-5xl font-bold mb-5">Last Epoch Planner Web</h1>
-            <p className="mb-5 text-xl">
-              The web version of Last Epoch Planner.
-            </p>
+            <p className="mb-5 text-xl">The web version of Last Epoch Planner.</p>
           </div>
 
           {/* Last Epoch Start Buttons */}
@@ -101,13 +66,24 @@ export default function Index({ loaderData }: Route.ComponentProps) {
               <span className="min-h-44">
                 <img src="/logo-le.png" alt="Last Epoch" className="mx-auto mb-4" />
               </span>
-              <Link to="/le" className="btn btn-primary btn-block">
-                Start in browser <ArrowRightIcon className="size-4" />
+              <Link to="/le" className="btn btn-primary btn-block min-h-12">
+                <div className="flex flex-col text-center">
+                  <span className="text-lg font-semibold">Start in browser</span>
+                  <span className="text-xs opacity-75">
+                    {loaderData.le.head} • {dayjs(loaderData.le.versions[0].date).format("MMM D, YYYY")}
+                  </span>
+                </div>
+                <ArrowRightIcon className="size-4" />
               </Link>
-              <br/>
-              <a href="https://github.com/Musholic/LastEpochPlanner/releases">
-                Download desktop releases...
-              </a>
+              <Link to="/le/versions/beta" className="btn btn-secondary btn-block mt-2 min-h-12">
+                <div className="flex flex-col text-center">
+                  <span className="text-lg font-semibold">Try Beta Version</span>
+                  <span className="text-xs opacity-75">{dayjs(loaderData.le.beta).format("MMM D, YYYY HH:mm")}</span>
+                </div>
+                <ArrowRightIcon className="size-4" />
+              </Link>
+              <br />
+              <a href="https://github.com/Musholic/LastEpochPlanner/releases">Download desktop releases...</a>
             </div>
           </div>
         </div>
@@ -121,9 +97,11 @@ export default function Index({ loaderData }: Route.ComponentProps) {
         <div role="alert" className="max-w-4xl mx-auto alert alert-warning prose">
           <ul>
             <li>
-              Offline and online import are not possible at the moment. However, online import is possible on <a href="https://pob.cool">pob.cool</a> in the meantime.
-              <br/>
-              You either have to start from scratch, or you can copy paste the whole build code (generated from the tool)
+              Offline and online import are not possible at the moment. However, online import is possible on{" "}
+              <a href="https://pob.cool">pob.cool</a> in the meantime.
+              <br />
+              You either have to start from scratch, or you can copy paste the whole build code (generated from the
+              tool)
             </li>
           </ul>
         </div>
@@ -166,23 +144,27 @@ export default function Index({ loaderData }: Route.ComponentProps) {
           <div className="max-w-4xl mx-auto">
             <div className="card bg-base-200 shadow-md p-6">
               <div className="prose max-w-none max-h-96 overflow-y-auto">
-                <ReactMarkdown>
-                  {changelog}
-                </ReactMarkdown>
+                <ReactMarkdown>{changelog}</ReactMarkdown>
               </div>
             </div>
           </div>
         </section>
       )}
-      
+
       {/* Pob.cool Section */}
       <section className="py-10 px-4 bg-base-100">
         <h2 className="text-3xl font-bold text-center mb-6">
           <a href="https://pob.cool">pob.cool</a>
         </h2>
         <div className="text-center">
-          <p>The web version of Last Epoch Planner is based on the original work done by Koji AGAWA (@atty303) for <a href="https://pob.cool">pob.cool</a>.</p>
-          <p>Last Epoch Planner is also available on <a href="https://pob.cool">pob.cool</a> with additional features like online import support, cloud save, and access to old versions.</p>
+          <p>
+            The web version of Last Epoch Planner is based on the original work done by Koji AGAWA (@atty303) for{" "}
+            <a href="https://pob.cool">pob.cool</a>.
+          </p>
+          <p>
+            Last Epoch Planner is also available on <a href="https://pob.cool">pob.cool</a> with additional features
+            like online import support, cloud save, and access to old versions.
+          </p>
         </div>
       </section>
 
@@ -193,8 +175,8 @@ export default function Index({ loaderData }: Route.ComponentProps) {
             © 2025 Musholic (
             <a className="link" href="https://github.com/musholic" target="_blank" rel="noreferrer">
               @musholic
-            </a> )
-            © 2025 Koji AGAWA (
+            </a>{" "}
+            ) © 2025 Koji AGAWA (
             <a className="link" href="https://x.com/atty303" target="_blank" rel="noreferrer">
               @atty303
             </a>

@@ -3,7 +3,7 @@ import { Outlet } from "react-router";
 import type { Route } from "../routes/+types/_game";
 
 export type Games = {
-  [key in Game]: { head: string; versions: { value: string; date: string }[] };
+  [key in Game]: { head: string; beta: string; versions: { value: string; date: string }[] };
 };
 
 export async function clientLoader(args: Route.ClientLoaderArgs) {
