@@ -2,6 +2,7 @@
 #include <emscripten.h>
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "image.h"
 #include "util.h"
 
@@ -19,7 +20,8 @@ typedef struct {
     int height;
 } VfsEntry;
 
-static VfsEntry st_vfs_entries[1024];
+// Intentionally not freed - memory is reclaimed when WASM module is unloaded
+static VfsEntry *st_vfs_entries = NULL;
 static int st_vfs_count = 0;
 
 static void parse_vfs_tsv() {
@@ -29,25 +31,50 @@ static void parse_vfs_tsv() {
         return;
     }
 
+    // First pass: count lines
     char line[1024];
+    int line_count = 0;
+    while (fgets(line, sizeof(line), f) != NULL) {
+        line_count++;
+    }
+    
+    if (line_count == 0) {
+        fclose(f);
+        return;
+    }
+
+    // Allocate memory for all entries
+    st_vfs_entries = malloc(line_count * sizeof(VfsEntry));
+    if (st_vfs_entries == NULL) {
+        log_error("Failed to allocate memory for VFS entries");
+        fclose(f);
+        return;
+    }
+
+    // Second pass: parse entries
+    rewind(f);
+    st_vfs_count = 0;
     while (fgets(line, sizeof(line), f) != NULL) {
         char name[1024];
         int width, height;
         if (strlen(line) < 1024) {
-            sscanf(line, "%s\t%d\t%d", name, &width, &height);
-            if (st_vfs_count < 1024) {
+            if (sscanf(line, "%s\t%d\t%d", name, &width, &height) == 3) {
                 strcpy(st_vfs_entries[st_vfs_count].name, name);
                 st_vfs_entries[st_vfs_count].width = width;
                 st_vfs_entries[st_vfs_count].height = height;
+                st_vfs_count++;
             }
         }
-        st_vfs_count += 1;
     }
 
     fclose(f);
 }
 
 static VfsEntry *lookup_vfs_entry(const char *name) {
+    if (st_vfs_entries == NULL) {
+        return NULL;
+    }
+    
     for (int i = 0; i < st_vfs_count; i++) {
         if (strcmp(st_vfs_entries[i].name, name) == 0) {
             return &st_vfs_entries[i];
