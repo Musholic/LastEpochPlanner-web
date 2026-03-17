@@ -8,7 +8,7 @@ const rootDir = path.resolve(__dirname, "../..");
 const packerR2Dir = path.resolve(__dirname, "../packer/r2");
 
 // https://vitejs.dev/config/
-export default defineConfig(({ mode }) => ({
+export default defineConfig(({ mode, isSsrBuild }) => ({
   base: "/",
   server: {
     host: true,
@@ -42,9 +42,7 @@ export default defineConfig(({ mode }) => ({
         : "/version.json",
     ),
     __ASSET_PREFIX__: JSON.stringify(
-      mode === "development" && process.env.POB_COOL_ASSET === undefined
-        ? `/@fs/${packerR2Dir}`
-        : "",
+      mode === "development" && process.env.POB_COOL_ASSET === undefined ? `/@fs/${packerR2Dir}` : "",
     ),
   },
   worker: {
@@ -59,8 +57,14 @@ export default defineConfig(({ mode }) => ({
   plugins: [
     reactRouter(),
     tailwindcss(),
-    viteStaticCopy({
-      targets: [{ src: normalizePath(path.join(rootDir, "packages/driver/dist/*")), dest: "dist/" }],
-    }),
+    !isSsrBuild &&
+      viteStaticCopy({
+        targets: [
+          {
+            src: normalizePath(path.join(rootDir, "packages/driver/dist/*")),
+            dest: "dist/",
+          },
+        ],
+      }),
   ],
 }));
