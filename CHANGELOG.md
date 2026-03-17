@@ -1,5 +1,51 @@
 # Changelog
 
+## [0.27.7](https://github.com/atty303/pob-web/compare/v0.27.6...v0.27.7) (2026-03-07)
+
+
+### Bug Fixes
+
+* 🐛 Cap WebGL gl.MAX_TEXTURE_IMAGE_UNITS to 100 ([f1e57e7](https://github.com/atty303/pob-web/commit/f1e57e7ae346d2341834d3c403a66f6b5467f0bd))
+* 🐛 Cap WebGL gl.MAX_TEXTURE_IMAGE_UNITS to 100 ([#146](https://github.com/atty303/pob-web/issues/146)) ([b084566](https://github.com/atty303/pob-web/commit/b08456682afa957d99381db9b7b0d94d494e3108))
+* **driver:** make loadBuildFromCode deterministic on running instances ([0b6a8eb](https://github.com/atty303/pob-web/commit/0b6a8eb181c51f92382f373c3ea9f86275817b30))
+* **driver:** make loadBuildFromCode deterministic on running instances ([#144](https://github.com/atty303/pob-web/issues/144)) ([90e32fa](https://github.com/atty303/pob-web/commit/90e32fa2d8fe1ebb71690e88912fd2e8730ecfec))
+
+## [0.27.6](https://github.com/atty303/pob-web/compare/v0.27.5...v0.27.6) (2026-02-05)
+
+
+### Bug Fixes
+
+* **driver:** add GetDrawColor to fix crash in PoB v0.13.0 ([2d71c36](https://github.com/atty303/pob-web/commit/2d71c361263f22b535b8b7d889c8110deeee07c7))
+* **driver:** add GetDrawColor to fix crash in PoB v0.13.0 ([#139](https://github.com/atty303/pob-web/issues/139)) ([dc11c7c](https://github.com/atty303/pob-web/commit/dc11c7c217483c68ead96b9f40014b280c22c4dc))
+
+## [0.27.5](https://github.com/atty303/pob-web/compare/v0.27.4...v0.27.5) (2025-11-23)
+
+
+### Bug Fixes
+
+* **driver:** add double-click support to keyboard event handling ([ee6e289](https://github.com/atty303/pob-web/commit/ee6e2893723433c219163d0e9b0b01c2689463e3))
+* **driver:** add double-click support to keyboard event handling ([#136](https://github.com/atty303/pob-web/issues/136)) ([ac2e811](https://github.com/atty303/pob-web/commit/ac2e8117d7b563329b764aa35623c0e542fa4ec6))
+* **driver:** add support for new lcurl options for SSL and redirects ([822f9b0](https://github.com/atty303/pob-web/commit/822f9b06ebde05330140d8290dfce4c98662f2cd))
+* **driver:** add support for new lcurl options for SSL and redirects ([125a7dd](https://github.com/atty303/pob-web/commit/125a7dd1fca3c2713a77581e55913b8dac6f6282))
+* **driver:** add support for new lcurl options for SSL and redirects ([#138](https://github.com/atty303/pob-web/issues/138)) ([1caa834](https://github.com/atty303/pob-web/commit/1caa834fd2db64e552b79c03ee2adf90f9403ad8))
+
+## [0.27.4](https://github.com/atty303/pob-web/compare/v0.27.3...v0.27.4) (2025-11-04)
+
+
+### Bug Fixes
+
+* **web:** add missing Fontin font files ([56d78f4](https://github.com/atty303/pob-web/commit/56d78f4e260d2ed1e3f4aa48d96a3264f15e6199))
+
+## [0.27.3](https://github.com/atty303/pob-web/compare/v0.27.2...v0.27.3) (2025-11-04)
+
+
+### Bug Fixes
+
+* **driver:** add Fontin font loading ([fb6aa8c](https://github.com/atty303/pob-web/commit/fb6aa8ca1997df6b6fd2798ef7883921c5606313))
+* **driver:** add placeholder LuaJIT options ([9494309](https://github.com/atty303/pob-web/commit/94943097d6d670b907bb16cbc465e77bc33db150))
+* **driver:** bump version to 0.27.2 in package-lock.json ([c3eee25](https://github.com/atty303/pob-web/commit/c3eee258e332916e9dfef851fd162a8234198f1e))
+* PoB1 v2.57.0 compatibility ([#132](https://github.com/atty303/pob-web/issues/132)) ([f3d6768](https://github.com/atty303/pob-web/commit/f3d6768eda7dd630a3259e3b119aa0b66bbbe8bc))
+
 ## [0.27.2](https://github.com/atty303/pob-web/compare/v0.27.1...v0.27.2) (2025-09-06)
 
 
