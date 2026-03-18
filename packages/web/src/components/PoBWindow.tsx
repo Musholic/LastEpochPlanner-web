@@ -61,6 +61,7 @@ export default function PoBWindow(props: {
       },
       onFrame: (at, time, stats) => onFrameRef.current(at, time, stats),
       onFetch: async (url, headers, body) => {
+        let rep = undefined;
         try {
           const r = await fetch(url, {
             method: body ? "POST" : "GET",
@@ -68,25 +69,47 @@ export default function PoBWindow(props: {
             headers,
           });
           if (r.ok) {
-            let rep = {
+            rep = {
               body: await r.text(),
               headers: Object.fromEntries(r.headers.entries()),
               status: r.status,
               error: undefined
             };
             log.debug(tag.pob, "CORS fetch success", url, rep);
-            return rep;
           }
         } catch (e) {
           log.warn(tag.pob, "CORS fetch error", e);
         }
 
-        return {
-          body: "",
-          headers: {} as Record<string, string>,
-          status: 404,
-          error: "Not Found"
-        };
+        if (!rep && url.startsWith("https://www.lastepochtools.com/")) {
+          try {
+            let urlPath = url.replace("https://www.lastepochtools.com/", "");
+            const r = await fetch("https://let-proxy.lastepochplanner.com/" + urlPath, {
+              method: body ? "POST" : "GET",
+              body,
+              headers,
+            });
+            rep = {
+              body: await r.text(),
+              headers: Object.fromEntries(r.headers.entries()),
+              status: r.status,
+              error: undefined
+            };
+          } catch (e) {
+            log.warn(tag.pob, "Proxy fetch error", e);
+          }
+        }
+
+        if(!rep) {
+          return {
+            body: "",
+            headers: {} as Record<string, string>,
+            status: 404,
+            error: "Not Found"
+          };
+        }
+
+        return rep;
       },
       onTitleChange: title => onTitleChangeRef.current(title),
     });
