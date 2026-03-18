@@ -97,11 +97,10 @@ export default function Index({ loaderData }: Route.ComponentProps) {
         <div role="alert" className="max-w-4xl mx-auto alert alert-warning prose">
           <ul>
             <li>
-              Offline and online import are not possible at the moment. However, online import is possible on{" "}
-              <a href="https://pob.cool">pob.cool</a> in the meantime.
-              <br />
-              You either have to start from scratch, or you can copy paste the whole build code (generated from the
-              tool)
+              Offline import is not possible at the moment.
+            </li>
+            <li>
+              <strong>Online import is now working properly</strong> through a CORS proxy, so all users have the same source IP. This will likely cause rate limiting.
             </li>
           </ul>
         </div>
@@ -162,8 +161,8 @@ export default function Index({ loaderData }: Route.ComponentProps) {
             <a href="https://pob.cool">pob.cool</a>.
           </p>
           <p>
-            Last Epoch Planner is also available on <a href="https://pob.cool">pob.cool</a> with additional features
-            like online import support, cloud save, and access to old versions.
+            <strong>Last Epoch Planner is also available on <a href="https://pob.cool">pob.cool</a></strong> with additional features
+            like cloud save and access to old versions.
           </p>
         </div>
       </section>
