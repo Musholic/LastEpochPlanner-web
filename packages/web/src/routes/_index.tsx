@@ -36,19 +36,47 @@ export async function clientLoader(args: Route.ClientLoaderArgs) {
 
 export default function Index({ loaderData }: Route.ComponentProps) {
   const [changelog, setChangelog] = useState<string>("");
-  const [buildUrl, setBuildUrl] = useState<string>("");
+  const [buildInput, setBuildInput] = useState<string>("");
   const [isBeta, setIsBeta] = useState<boolean>(false);
   const [copied, setCopied] = useState<boolean>(false);
+  const [shortenedUrl, setShortenedUrl] = useState<string>("");
+  const [isShortening, setIsShortening] = useState<boolean>(false);
 
-  const directLink = buildUrl
-    ? `${window.location.origin}${isBeta ? "/le/versions/beta" : "/le"}#build=${buildUrl}`
+  const directLink = buildInput
+    ? `https://www.lastepochplanner.com${isBeta ? "/le/versions/beta" : "/le"}#build=${buildInput}`
     : "";
 
-  const handleCopy = async () => {
-    if (directLink) {
-      await navigator.clipboard.writeText(directLink);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+  const handleCopy = async (text: string) => {
+    await navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleShorten = async () => {
+    if (!directLink || isShortening) return;
+
+    setIsShortening(true);
+    setShortenedUrl("");
+
+    try {
+      const response = await fetch(`https://build.lastepochplanner.com/gen-url`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ url: directLink }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to shorten URL");
+      }
+
+      const data = await response.json();
+      setShortenedUrl(data.shortUrl);
+    } catch (error) {
+      console.error("Failed to shorten URL:", error);
+    } finally {
+      setIsShortening(false);
     }
   };
 
@@ -63,6 +91,11 @@ export default function Index({ loaderData }: Route.ComponentProps) {
       })
       .catch(error => console.error("Failed to fetch changelog:", error));
   }, []);
+
+  // Reset shortened URL when build input changes or beta is toggled
+  useEffect(() => {
+    setShortenedUrl("");
+  }, [buildInput, isBeta]);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -133,14 +166,14 @@ export default function Index({ loaderData }: Route.ComponentProps) {
             <div className="flex flex-col md:flex-row gap-3 items-end">
               <div className="form-control flex-1">
                 <label className="label py-1">
-                  <span className="label-text text-sm">Build URL</span>
+                  <span className="label-text text-sm">Build URL or Code</span>
                 </label>
                 <input
                   type="text"
-                  placeholder="https://www.lastepochtools.com/planner/..."
+                  placeholder="https://www.lastepochtools.com/planner/... or paste generated build code"
                   className="input input-bordered input-sm w-full"
-                  value={buildUrl}
-                  onChange={(e) => setBuildUrl(e.target.value)}
+                  value={buildInput}
+                  onChange={(e) => setBuildInput(e.target.value)}
                 />
               </div>
               <label className="label cursor-pointer justify-start gap-2 py-1">
@@ -152,26 +185,48 @@ export default function Index({ loaderData }: Route.ComponentProps) {
                 />
                 <span className="label-text">Beta</span>
               </label>
-              {buildUrl && (
-                <button
-                  className="btn btn-primary btn-sm"
-                  onClick={handleCopy}
-                >
-                  {copied ? "Copied!" : "Copy Link"}
-                </button>
+              {buildInput && (
+                <>
+                  <button
+                    className="btn btn-primary btn-sm"
+                    onClick={() => handleCopy(shortenedUrl || directLink)}
+                  >
+                    {copied ? "Copied!" : "Copy Link"}
+                  </button>
+                  {directLink.length > 100 && (
+                    <button
+                      className="btn btn-secondary btn-sm"
+                      onClick={handleShorten}
+                      disabled={isShortening || !!shortenedUrl}
+                    >
+                      {isShortening ? "Shortening..." : shortenedUrl ? "Shortened" : "Shorten"}
+                    </button>
+                  )}
+                </>
               )}
             </div>
             {directLink && (
               <div className="mt-3">
                 <span className="text-sm opacity-70">Generated Link: </span>
-                <a
-                  href={directLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="link link-primary break-all"
-                >
-                  {directLink}
-                </a>
+                {shortenedUrl ? (
+                  <a
+                    href={shortenedUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="link link-primary break-all"
+                  >
+                    {shortenedUrl}
+                  </a>
+                ) : (
+                  <a
+                    href={directLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="link link-primary break-all"
+                  >
+                    {directLink}
+                  </a>
+                )}
               </div>
             )}
           </div>
