@@ -6,6 +6,7 @@ import {
   DeviceTabletIcon,
   ExclamationTriangleIcon,
   GlobeAltIcon,
+  LinkIcon,
   SparklesIcon,
 } from "@heroicons/react/24/solid";
 import dayjs from "dayjs";
@@ -35,6 +36,21 @@ export async function clientLoader(args: Route.ClientLoaderArgs) {
 
 export default function Index({ loaderData }: Route.ComponentProps) {
   const [changelog, setChangelog] = useState<string>("");
+  const [buildUrl, setBuildUrl] = useState<string>("");
+  const [isBeta, setIsBeta] = useState<boolean>(false);
+  const [copied, setCopied] = useState<boolean>(false);
+
+  const directLink = buildUrl
+    ? `${window.location.origin}${isBeta ? "/le/versions/beta" : "/le"}#build=${buildUrl}`
+    : "";
+
+  const handleCopy = async () => {
+    if (directLink) {
+      await navigator.clipboard.writeText(directLink);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
 
   useEffect(() => {
     fetch("/CHANGELOG.md")
@@ -103,6 +119,62 @@ export default function Index({ loaderData }: Route.ComponentProps) {
               <strong>Online import is now working properly</strong> through a CORS proxy, so all users have the same source IP. This will likely cause rate limiting.
             </li>
           </ul>
+        </div>
+      </section>
+
+      {/* Direct Link Generator Section */}
+      <section className="py-10 px-4 bg-base-100">
+        <h2 className="text-3xl font-bold text-center mb-6">
+          <LinkIcon className="size-8 mr-2 inline text-accent" />
+          Generate Direct Link
+        </h2>
+        <div className="max-w-4xl mx-auto">
+          <div className="card bg-base-200 shadow-md p-4">
+            <div className="flex flex-col md:flex-row gap-3 items-end">
+              <div className="form-control flex-1">
+                <label className="label py-1">
+                  <span className="label-text text-sm">Build URL</span>
+                </label>
+                <input
+                  type="text"
+                  placeholder="https://www.lastepochtools.com/planner/..."
+                  className="input input-bordered input-sm w-full"
+                  value={buildUrl}
+                  onChange={(e) => setBuildUrl(e.target.value)}
+                />
+              </div>
+              <label className="label cursor-pointer justify-start gap-2 py-1">
+                <input
+                  type="checkbox"
+                  className="checkbox checkbox-primary checkbox-sm"
+                  checked={isBeta}
+                  onChange={(e) => setIsBeta(e.target.checked)}
+                />
+                <span className="label-text">Beta</span>
+              </label>
+              {buildUrl && (
+                <button
+                  className="btn btn-primary btn-sm"
+                  onClick={handleCopy}
+                >
+                  {copied ? "Copied!" : "Copy Link"}
+                </button>
+              )}
+            </div>
+            {directLink && (
+              <div className="mt-3">
+                <span className="text-sm opacity-70">Generated Link: </span>
+                <a
+                  href={directLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="link link-primary break-all"
+                >
+                  {directLink}
+                </a>
+              </div>
+            )}
+          </div>
         </div>
       </section>
 
