@@ -43,7 +43,7 @@ export default function Index({ loaderData }: Route.ComponentProps) {
   const [isShortening, setIsShortening] = useState<boolean>(false);
 
   const directLink = buildInput
-    ? `https://www.lastepochplanner.com${isBeta ? "/le/versions/beta" : "/le"}#build=${buildInput}`
+    ? `https://lastepochplanner.com${isBeta ? "/le/versions/beta" : "/le"}#build=${buildInput}`
     : "";
 
   const handleCopy = async (text: string) => {
