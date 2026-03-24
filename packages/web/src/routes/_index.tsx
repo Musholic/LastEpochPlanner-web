@@ -53,26 +53,35 @@ export default function Index({ loaderData }: Route.ComponentProps) {
   };
 
   const handleShorten = async () => {
-    if (!directLink || isShortening) return;
+    if (!buildInput || isShortening) return;
 
     setIsShortening(true);
     setShortenedUrl("");
 
     try {
-      const response = await fetch(`https://build.lastepochplanner.com/gen-url`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ url: directLink }),
-      });
+      const params = new URLSearchParams();
+      params.append("code", buildInput);
+      if (isBeta) {
+        params.append("beta", isBeta.toString());
+      }
+
+      const response = await fetch(
+        `https://build.lastepochplanner.com/gen-url`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: params.toString(),
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Failed to shorten URL");
       }
 
-      const data = await response.json();
-      setShortenedUrl(data.shortUrl);
+      const shortUrl = await response.text();
+      setShortenedUrl(shortUrl);
     } catch (error) {
       console.error("Failed to shorten URL:", error);
     } finally {
