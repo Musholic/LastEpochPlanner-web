@@ -30,16 +30,8 @@ export default function CorsStatus() {
       },
       {
         key: "proxy2",
-        url: `https://let-proxy2.lastepochplanner.com/v1`,
-        options: {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            cmd: "request.get",
-            url: `https://www.lastepochtools.com/planner/${id}`,
-            maxTimeout: 60000
-          })
-        },
+        url: `https://let-proxy2.lastepochplanner.com/planner/${id}`,
+        options: { method: "GET" },
       },
     ];
 
