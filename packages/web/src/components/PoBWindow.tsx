@@ -31,10 +31,10 @@ export default function PoBWindow(props: {
   const [buildCode, setBuildCode] = useState("");
   useEffect(() => {
     if (hash.startsWith("#build=")) {
-      const code = hash.slice("#build=".length);
+      const code = decodeURIComponent(hash.slice("#build=".length));
       setBuildCode(code);
     } else if (hash.startsWith("#=")) {
-      const code = hash.slice("#=".length);
+      const code = decodeURIComponent(hash.slice("#=".length));
       setBuildCode(code);
     }
   }, [hash]);

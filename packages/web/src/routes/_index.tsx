@@ -27,6 +27,11 @@ dayjs.extend(localizedFormat);
 export async function clientLoader(args: Route.ClientLoaderArgs) {
   // Redirect if the landing from the pobb.in
   if (location.hash.startsWith("#build=")) {
+    const url = new URL(window.location.href);
+    const betaParam = url.searchParams.get("beta");
+    if (betaParam !== null) {
+      return redirect(`/le/versions/beta#${location.hash.slice("#build".length)}`);
+    }
     return redirect(`/le#${location.hash.slice("#build".length)}`);
   }
 
@@ -41,10 +46,74 @@ export default function Index({ loaderData }: Route.ComponentProps) {
   const [copied, setCopied] = useState<boolean>(false);
   const [shortenedUrl, setShortenedUrl] = useState<string>("");
   const [isShortening, setIsShortening] = useState<boolean>(false);
+  const [warning, setWarning] = useState<string>("");
 
-  const directLink = buildInput
-    ? `https://lastepochplanner.com${isBeta ? "/le/versions/beta" : "/le"}#build=${buildInput}`
-    : "";
+  // Extract window["buildInfo"] from pasted page source (when the user copy/paste the latepoochtools build source)
+  const extractBuildInfo = (content: string): string | null => {
+    // Find the whole line starting with window["buildInfo"]
+    const match = content.match(/^\s*window\["buildInfo"\].*$/m);
+    return match ? match[0] : null;
+  };
+
+  // Deflate and base64 encode the build info
+  const compressAndEncode = async (jsonString: string): Promise<string> => {
+    // Compress using deflate (zlib format)
+    const encoder = new TextEncoder();
+    const data = encoder.encode(jsonString);
+
+    const compressedStream = new Response(
+      new Response(data).body?.pipeThrough(new CompressionStream('deflate'))
+    );
+    const compressedBuffer = await compressedStream.arrayBuffer();
+
+    // Base64 encode using chunks to handle large data
+    const bytes = new Uint8Array(compressedBuffer);
+    let binary = '';
+    for (let i = 0; i < bytes.length; i++) {
+      binary += String.fromCharCode(bytes[i]);
+    }
+    return btoa(binary);
+  };
+
+  const handleBuildInputChange = async (value: string) => {
+    // Clear shortened URL when input changes
+    setShortenedUrl("");
+    setWarning("");
+
+    // Check if the input contains window["buildInfo"]
+    const buildInfo = extractBuildInfo(value);
+
+    if (buildInfo) {
+      try {
+        const encoded = await compressAndEncode(buildInfo);
+        setBuildInput(encoded);
+      } catch (error) {
+        console.error("Failed to process build info:", error);
+        setBuildInput(value);
+      }
+    } else {
+      // Check if it's a base64 encoded string or a lastepochtools.com link
+      const isBase64 = /^[A-Za-z0-9/+=_-]+$/.test(value.trim());
+      const isLastEpochToolsLink = value.trim().match(/^https?:\/\/www\.lastepochtools\.com\/planner\//);
+
+      if (isBase64 || isLastEpochToolsLink) {
+        setBuildInput(value.trim());
+      } else if (value.trim()) {
+        setWarning("Only base64 encoded build codes or lastepochtools.com links are supported");
+        setBuildInput("");
+      } else {
+        setBuildInput("");
+      }
+    }
+  };
+
+  const directLink = (() => {
+    if (!buildInput) return "";
+    if (shortenedUrl) {
+      return `${shortenedUrl}${isBeta ? "?beta" : ""}`;
+    }
+    return `${window.location.origin}?${isBeta ? "beta" : ""}#build=${encodeURIComponent(buildInput)}`;
+  })();
 
   const handleCopy = async (text: string) => {
     await navigator.clipboard.writeText(text);
@@ -61,9 +130,6 @@ export default function Index({ loaderData }: Route.ComponentProps) {
     try {
       const params = new URLSearchParams();
       params.append("code", buildInput);
-      if (isBeta) {
-        params.append("beta", isBeta.toString());
-      }
 
       const response = await fetch(
         `https://build.lastepochplanner.com/gen-url`,
@@ -100,11 +166,6 @@ export default function Index({ loaderData }: Route.ComponentProps) {
       })
       .catch(error => console.error("Failed to fetch changelog:", error));
   }, []);
-
-  // Reset shortened URL when build input changes or beta is toggled
-  useEffect(() => {
-    setShortenedUrl("");
-  }, [buildInput, isBeta]);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -177,12 +238,11 @@ export default function Index({ loaderData }: Route.ComponentProps) {
                 <label className="label py-1">
                   <span className="label-text text-sm">Build URL or Code</span>
                 </label>
-                <input
-                  type="text"
+                <textarea
                   placeholder="https://www.lastepochtools.com/planner/... or paste generated build code"
-                  className="input input-bordered input-sm w-full"
+                  className="textarea textarea-bordered textarea-sm w-full h-9 min-h-9 overflow-y-auto"
                   value={buildInput}
-                  onChange={(e) => setBuildInput(e.target.value)}
+                  onChange={(e) => handleBuildInputChange(e.target.value)}
                 />
               </div>
               <label className="label cursor-pointer justify-start gap-2 py-1">
@@ -198,44 +258,56 @@ export default function Index({ loaderData }: Route.ComponentProps) {
                 <>
                   <button
                     className="btn btn-primary btn-sm"
-                    onClick={() => handleCopy(shortenedUrl || directLink)}
+                    onClick={() => handleCopy(directLink)}
                   >
                     {copied ? "Copied!" : "Copy Link"}
                   </button>
-                  {directLink.length > 100 && (
+                  {directLink.length > 100 && !shortenedUrl && (
                     <button
                       className="btn btn-secondary btn-sm"
                       onClick={handleShorten}
-                      disabled={isShortening || !!shortenedUrl}
+                      disabled={isShortening}
                     >
-                      {isShortening ? "Shortening..." : shortenedUrl ? "Shortened" : "Shorten"}
+                      {isShortening ? "Shortening..." : "Shorten"}
                     </button>
                   )}
                 </>
               )}
             </div>
+            {warning && (
+              <div className="mt-3 alert alert-warning">
+                <ExclamationTriangleIcon className="size-5" />
+                <span>{warning}</span>
+              </div>
+            )}
+            {buildInput.match(/^https:\/\/www\.lastepochtools\.com\/planner\//) && (
+              <div className="mt-3 alert alert-info">
+                <div>
+                  <strong>Tip:</strong> To avoid CORS proxy issues, manually copy the page source instead:
+                  <ol className="list-decimal list-inside mt-2">
+                    <li>
+                      Copy this URL and open it in your browser:{" "}
+                      <code className="bg-base-300 px-2 py-1 rounded text-xs select-all text-base-content">
+                        view-source:{buildInput}
+                      </code>
+                    </li>
+                    <li>Copy all the content (Ctrl+A, Ctrl+C)</li>
+                    <li>Paste it above instead of the URL</li>
+                  </ol>
+                </div>
+              </div>
+            )}
             {directLink && (
               <div className="mt-3">
                 <span className="text-sm opacity-70">Generated Link: </span>
-                {shortenedUrl ? (
-                  <a
-                    href={shortenedUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="link link-primary break-all"
-                  >
-                    {shortenedUrl}
-                  </a>
-                ) : (
-                  <a
-                    href={directLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="link link-primary break-all"
-                  >
-                    {directLink}
-                  </a>
-                )}
+                <a
+                  href={directLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="link link-primary break-all"
+                >
+                  {directLink}
+                </a>
               </div>
             )}
           </div>
