@@ -61,7 +61,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta property="og:locale" content="en_US" />
         <Meta />
         <Links />
-        <script defer data-domain="lastepochplanner.com" src="https://plausible.lastepochplanner.com/js/script.outbound-links.js"></script>
+        <script defer data-domain="lastepochplanner.com" src="https://plausible.lastepochplanner.com/js/script.manual.outbound-links.js"></script>
+        <script defer src="/plausible-init.js" />
       </head>
       <body className="bg-base text-base-content h-full">
         {children}
