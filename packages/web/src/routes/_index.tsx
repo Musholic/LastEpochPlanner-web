@@ -1,8 +1,7 @@
 import {
   ArchiveBoxIcon,
-  ArrowPathIcon,
   ArrowRightIcon,
-  CloudIcon,
+  ComputerDesktopIcon,
   DeviceTabletIcon,
   ExclamationTriangleIcon,
   GlobeAltIcon,
@@ -212,6 +211,30 @@ export default function Index({ loaderData }: Route.ComponentProps) {
         </div>
       </section>
 
+      {/* About Original Tool Section */}
+      <section className="py-10 px-4 bg-base-100">
+        <h2 className="text-3xl font-bold text-center mb-6">
+          <ComputerDesktopIcon className="size-8 mr-2 inline text-primary" />
+          What is Last Epoch Planner?
+        </h2>
+        <div className="max-w-4xl mx-auto">
+          <div className="card bg-base-200 shadow-md p-6">
+            <p className="mb-4">
+              <strong>Last Epoch Planner</strong> is a comprehensive offline build planner for the game Last Epoch.
+              Originally a fork of <a href="https://github.com/PathOfBuildingCommunity/PathOfBuilding" className="link link-primary">Path of Building</a>,
+              it was adapted by <a href="https://github.com/Musholic" className="link link-primary">Musholic</a> and is available as an open source project on <a href="https://github.com/Musholic/LastEpochPlanner" className="link link-primary">GitHub</a>.
+            </p>
+            <p className="mb-4">
+              It allows players to plan every aspect of their character, including the passive tree, skill trees, and item crafting.
+              It also features DPS calculations and stat tracking to help optimize your build before investing resources in-game.
+            </p>
+            <p className="text-sm opacity-70 text-center">
+              This website allows you to run this powerful tool directly in your browser without needing to install the desktop application.
+            </p>
+          </div>
+        </div>
+      </section>
+
       <section className="py-10 px-4 bg-base-100">
         <h2 className="text-3xl font-bold text-center mb-6">
           <ExclamationTriangleIcon className="size-8 mr-2 inline text-warning" />
@@ -373,7 +396,7 @@ export default function Index({ loaderData }: Route.ComponentProps) {
             <a href="https://pob.cool">pob.cool</a>.
           </p>
           <p>
-            <strong>Last Epoch Planner is also available on <a href="https://pob.cool">pob.cool</a></strong> with additional features
+            <strong>Last Epoch Planner is also available on <a href="https://pob.cool" className="link link-primary">pob.cool</a></strong> with additional features
             like cloud save and access to old versions.
           </p>
         </div>
