@@ -112,7 +112,11 @@ export default function Index({ loaderData }: Route.ComponentProps) {
     if (shortenedUrl) {
       return `${shortenedUrl}${isBeta ? "?beta" : ""}`;
     }
-    return `${window.location.origin}${isBeta ? "?beta" : ""}#build=${encodeURIComponent(buildInput)}`;
+    const isLastEpochToolsLink = buildInput.match(/^https?:\/\/www\.lastepochtools\.com\/planner\//);
+
+    // lastepochtools.com links can be used directly without encoding them (this make it simpler to generate manually)
+    let buildCode = isLastEpochToolsLink ? buildInput : encodeURIComponent(buildInput);
+    return `${window.location.origin}${isBeta ? "?beta" : ""}#build=${buildCode}`;
   })();
 
   const handleCopy = async (text: string) => {
