@@ -329,8 +329,6 @@ export default function Index({ loaderData }: Route.ComponentProps) {
                 <span className="text-sm opacity-70">Generated Link: </span>
                 <a
                   href={directLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
                   className="link link-primary break-all"
                 >
                   {directLink}
