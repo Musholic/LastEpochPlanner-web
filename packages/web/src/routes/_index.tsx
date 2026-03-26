@@ -112,7 +112,7 @@ export default function Index({ loaderData }: Route.ComponentProps) {
     if (shortenedUrl) {
       return `${shortenedUrl}${isBeta ? "?beta" : ""}`;
     }
-    return `${window.location.origin}?${isBeta ? "beta" : ""}#build=${encodeURIComponent(buildInput)}`;
+    return `${window.location.origin}${isBeta ? "?beta" : ""}#build=${encodeURIComponent(buildInput)}`;
   })();
 
   const handleCopy = async (text: string) => {
