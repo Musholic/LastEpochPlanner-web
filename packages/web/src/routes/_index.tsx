@@ -15,7 +15,7 @@ import utc from "dayjs/plugin/utc";
 import { gameData } from "pob-game/src";
 import React, { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
-import { Link, redirect } from "react-router";
+import { Link, redirect, useLocation, useNavigate } from "react-router";
 import type { Route } from "../routes/+types/_index";
 import type { Games } from "./_game";
 
@@ -24,7 +24,6 @@ dayjs.extend(localeData);
 dayjs.extend(localizedFormat);
 
 export async function clientLoader(args: Route.ClientLoaderArgs) {
-  // Redirect if the landing from the pobb.in
   if (location.hash.startsWith("#build=")) {
     const url = new URL(window.location.href);
     const betaParam = url.searchParams.get("beta");
@@ -46,6 +45,22 @@ export default function Index({ loaderData }: Route.ComponentProps) {
   const [shortenedUrl, setShortenedUrl] = useState<string>("");
   const [isShortening, setIsShortening] = useState<boolean>(false);
   const [warning, setWarning] = useState<string>("");
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (location.hash.startsWith("#build=")) {
+      const betaParam = new URLSearchParams(location.search).get("beta");
+      // slice("#build".length) preserves the '=' and the code
+      const buildCode = location.hash.slice("#build".length);
+
+      if (betaParam !== null) {
+        navigate(`/le/versions/beta#${buildCode}`, { replace: true });
+      } else {
+        navigate(`/le#${buildCode}`, { replace: true });
+      }
+    }
+  }, [location.hash, location.search, navigate]);
 
   // Extract window["buildInfo"] from pasted page source (when the user copy/paste the latepoochtools build source)
   const extractBuildInfo = (content: string): string | null => {
