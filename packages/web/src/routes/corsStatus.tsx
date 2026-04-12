@@ -15,22 +15,24 @@ export default function CorsStatus() {
   });
 
   const runCheck = async () => {
-    const id = plannerId.trim().split("/").pop() || "";
+    const url = plannerId.trim();
+    const proxy1Url = url.replace(/^https?:\/\/[^/]+/, "https://let-proxy.lastepochplanner.com");
+    const proxy2Url = url.replace(/^https?:\/\/[^/]+/, "https://let-proxy2.lastepochplanner.com");
 
     const endpoints = [
       {
         key: "direct",
-        url: `https://www.lastepochtools.com/planner/${id}`,
+        url: url,
         options: { method: "GET" },
       },
       {
         key: "proxy1",
-        url: `https://let-proxy.lastepochplanner.com/planner/${id}`,
+        url: proxy1Url,
         options: { method: "GET" },
       },
       {
         key: "proxy2",
-        url: `https://let-proxy2.lastepochplanner.com/planner/${id}`,
+        url: proxy2Url,
         options: { method: "GET" },
       },
     ];
@@ -90,7 +92,7 @@ export default function CorsStatus() {
             <div className="flex flex-col md:flex-row gap-4">
               <input
                 type="text"
-                placeholder="Planner ID or URL (e.g. QqwgE5d3)"
+                placeholder="Planner URL (e.g. https://www.lastepochtools.com/planner/QqwgE5d3)"
                 className="input input-bordered flex-grow"
                 value={plannerId}
                 onChange={(e) => setPlannerId(e.target.value)}
