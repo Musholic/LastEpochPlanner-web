@@ -260,9 +260,6 @@ export default function Index({ loaderData }: Route.ComponentProps) {
             <li>
               Offline import is not possible at the moment.
             </li>
-            <li>
-              <strong>Online import is now working properly</strong> through a CORS proxy, so all users have the same source IP. This will likely cause rate limiting.
-            </li>
           </ul>
         </div>
       </section>
@@ -320,23 +317,6 @@ export default function Index({ loaderData }: Route.ComponentProps) {
               <div className="mt-3 alert alert-warning">
                 <ExclamationTriangleIcon className="size-5" />
                 <span>{warning}</span>
-              </div>
-            )}
-            {buildInput.match(/^https:\/\/www\.lastepochtools\.com\/planner\//) && (
-              <div className="mt-3 alert alert-info">
-                <div>
-                  <strong>Tip:</strong> To avoid CORS proxy issues, manually copy the page source instead:
-                  <ol className="list-decimal list-inside mt-2">
-                    <li>
-                      Copy this URL and open it in your browser:{" "}
-                      <code className="bg-base-300 px-2 py-1 rounded text-xs select-all text-base-content">
-                        view-source:{buildInput}
-                      </code>
-                    </li>
-                    <li>Copy all the content (Ctrl+A, Ctrl+C)</li>
-                    <li>Paste it above instead of the URL</li>
-                  </ol>
-                </div>
               </div>
             )}
             {directLink && (
